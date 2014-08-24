@@ -91,6 +91,14 @@ How to use
 
     pip install active_sqlalchemy
 
+
+PIP install directly from Github
+
+.. code:: python
+
+    pip install https://github.com/mardix/active-sqlalchemy/archive/master.zip
+
+
 ### Create a connection 
 
 The SQLAlchemy class is used to instantiate a SQLAlchemy connection to
