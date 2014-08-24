@@ -65,8 +65,21 @@ To query
 
 .. code:: python
 
-    all = User.select(User.location.distinct()).all()
-    
+    users = User.all(User.location.distinct())
+
+    for user in users:
+        ...
+
+
+To query with filter
+
+.. code:: python
+
+    all = User.all().filter(User.location == "USA")
+
+    for user in users:
+        ...
+
 
 
 How to use
