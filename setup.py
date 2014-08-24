@@ -57,7 +57,7 @@ def get_description():
     return desc.strip()
 
 setup(
-    name='Active SQLAlchemy',
+    name='Active-SQLAlchemy',
     version=get_version(),
     author='Mardix',
     packages=[PACKAGE],
