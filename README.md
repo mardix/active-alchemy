@@ -11,7 +11,6 @@ Works with Python 2.6, 2.7, 3.3, 3.4 and pypy.
 
 Create the model
 
-.. code:: python
 
     from active_sqlalchemy import SQLAlchemy
 
@@ -24,7 +23,6 @@ Create the model
 
 Insert new record
 
-.. code:: python
 
 	user = User.insert(name="Mardix", location="Moon")
 	
@@ -35,19 +33,19 @@ Insert new record
 	
 Get all records
 
-.. code:: python
+
 
     all = User.all()
     
 Get a record by id
 
-.. code:: python
+
 
     user = User.get(1234)
 
 Update record
 
-.. code:: python
+
 
 	user = User.get(1234)
 	if user:
@@ -55,7 +53,7 @@ Update record
 
 Soft Delete a record
 
-.. code:: python
+
 
 	user = User.get(1234)
 	if user:
@@ -63,7 +61,7 @@ Soft Delete a record
 		
 To query
 
-.. code:: python
+
 
     users = User.all(User.location.distinct())
 
@@ -73,7 +71,7 @@ To query
 
 To query with filter
 
-.. code:: python
+
 
     all = User.all().filter(User.location == "USA")
 
@@ -87,14 +85,14 @@ How to use
 
 ### Install
 
-.. code:: python
+
 
     pip install active_sqlalchemy
 
 
 PIP install directly from Github
 
-.. code:: python
+
 
     pip install https://github.com/mardix/active-sqlalchemy/archive/master.zip
 
@@ -104,7 +102,7 @@ PIP install directly from Github
 The SQLAlchemy class is used to instantiate a SQLAlchemy connection to
 a database.
 
-.. code:: python
+
 
     from active_sqlalchemy import SQLAlchemy
 
@@ -121,7 +119,7 @@ So you can declare models like this:
 
 To start, create a model class and extends it with db.ActiveModel
 
-.. code:: python
+
 
 	# model.py
 	
@@ -154,7 +152,7 @@ The name will not be plurialized.
 *Use db.ActiveModel for new tables that will have the same structure. It also offers a quasi active-record like on the records*
 
 
-.. code:: python
+
 
     class User(db.ActiveModel):
         login = db.Column(db.Unicode, unique=True)
@@ -169,7 +167,7 @@ The name will not be plurialized.
 
 Returns a ``session.query`` object to filter or apply more conditions. 
 
-.. code:: python
+
 
 	all = User.all()
 	for user in all:
@@ -177,7 +175,7 @@ Returns a ``session.query`` object to filter or apply more conditions.
 
 By default all() will show only all non-soft-delete items. To display both deleted and non deleted items, add the arg: exclude_deleted=False
 
-.. code:: python
+
 
 	all = User.all(exclude_deleted=False)
 	for user in all:
@@ -185,7 +183,7 @@ By default all() will show only all non-soft-delete items. To display both delet
 		
 Use all to select columns etc
 
-.. code:: python
+
 
 	all = User.all(User.name.distinct(), User.location)
 	for user in all:
@@ -193,7 +191,7 @@ Use all to select columns etc
 	
 Use all for complete filter
 
-.. code:: python
+
 
 	all = User.all(User.name.distinct, User.location).order_by(User.updated_at.desc()).filter(User.location == "Charlotte")
 		
@@ -201,7 +199,7 @@ Use all for complete filter
 
 Get one record by id. By default it will query only a record that is not soft-deleted
 
-.. code:: python
+
 
 	id = 1234
 	user = User.get(id)
@@ -215,14 +213,14 @@ Get one record by id. By default it will query only a record that is not soft-de
 
 To insert new record. Same as init, but just a shortcut to it.
 
-.. code:: python
+
 
 	record = User.insert(login='abc', passw_hash='hash', profile_id=123)
 	print (record.login) # -> abc
 
 or you can use the shortcut 
 
-.. code:: python
+
 
 	record = User(login='abc', passw_hash='hash', profile_id=123)
 	record.save()
@@ -232,7 +230,7 @@ or you can use the shortcut
 
 Update an existing record 
 
-.. code:: python
+
 
 	record = User.get(124)
 	record.update(login='new_login')
@@ -242,7 +240,7 @@ Update an existing record
 
 To soft delete a record. ``is_deleted`` will be set to True and ``deleted_at`` datetime will be set
 
-.. code:: python
+
 
 	record = User.get(124)
 	record.delete()
@@ -250,7 +248,7 @@ To soft delete a record. ``is_deleted`` will be set to True and ``deleted_at`` d
 	
 To soft UNdelete a record. ``is_deleted`` will be set to False and ``deleted_at`` datetime will be set
 
-.. code:: python
+
 
 	record = User.get(124)
 	record.delete(delete=False)
@@ -258,7 +256,7 @@ To soft UNdelete a record. ``is_deleted`` will be set to False and ``deleted_at`
 	
 To soft HARD delete a record. The record will be deleted completely
 
-.. code:: python
+
 
 	record = User.get(124)
 	record.delete(hard_delete=True)
@@ -267,7 +265,7 @@ To soft HARD delete a record. The record will be deleted completely
 
 A shortcut to ``session.add`` + ``session.commit()``
 
-.. code:: python
+
 
 	record = User.get(124)
 	record.login = "Another one"
@@ -282,7 +280,7 @@ A shortcut to ``session.add`` + ``session.commit()``
 
 *Use db.Model for existing table model, or when you don't need the preset columns*
 
-.. code:: python
+
 
     class User(db.Model):
     	id = db.Column(db.Integer, primary_key=True)
@@ -297,7 +295,7 @@ A shortcut to ``session.add`` + ``session.commit()``
 
 In a web application you need to call ``db.session.remove()`` after each response, and ``db.session.rollback()`` if an error occurs. However, if you are using Flask or other framework that uses the `after_request` and ``on_exception`` decorators, these bindings it is done automatically:
 
-.. code:: python
+
 
     app = Flask(__name__)
 
@@ -305,7 +303,7 @@ In a web application you need to call ``db.session.remove()`` after each respons
 
 or
 
-.. code:: python
+
 
     db = SQLAlchemy()
 
@@ -319,7 +317,7 @@ or
 
 Many databases, one web app
 
-.. code:: python
+
 
     app = Flask(__name__)
     db1 = SQLAlchemy(URI1, app)
@@ -328,7 +326,7 @@ Many databases, one web app
 
 Many web apps, one database
 
-.. code:: python
+
 
     db = SQLAlchemy(URI1)
 
@@ -340,7 +338,7 @@ Many web apps, one database
 
 Aggegated selects
 
-.. code:: python
+
 
     res = db.query(db.func.sum(Unit.price).label('price')).all()
     print res.price
@@ -348,12 +346,12 @@ Aggegated selects
 
 Mixins
 
-.. code:: python
+
 
     class IDMixin(object):
         id = db.Column(db.Integer, primary_key=True)
 
-.. code:: python
+
 
     class Model(IDMixin, db.Model):
         field = db.Column(db.Unicode)
@@ -363,7 +361,7 @@ Mixins
 
 All the results can be easily paginated
 
-.. code:: python
+
 
     users = User.paginate(page=2, per_page=20)
     print(list(users))  # [User(21), User(22), User(23), ... , User(40)]
@@ -371,7 +369,7 @@ All the results can be easily paginated
 
 The paginator object it's an iterable that returns only the results for that page, so you use it in your templates in the same way than the original result:
 
-.. code:: python
+
 
     {% for item in paginated_items %}
         <li>{{ item.name }}</li>
@@ -391,7 +389,7 @@ How many items are displayed can be controlled calling ``paginator.iter_pages`` 
 
 This is one way how you could render such a pagination in your templates:
 
-.. code:: python
+
 
     {% macro render_paginator(paginator, endpoint) %}
       <p>Showing {{ paginator.showing }} or {{ paginator.total }}</p>
