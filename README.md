@@ -15,7 +15,7 @@ Create the model
 
     from active_sqlalchemy import SQLAlchemy
 
-    db = SQLAlchemy('pymysql://user:password@host:port/mydatabase')
+    db = SQLAlchemy('pymysql+mysql://user:password@host:port/mydatabase')
 
 	class User(db.ActiveModel):
 		name = db.Column(db.String(25))
@@ -26,11 +26,11 @@ Insert new record
 
 .. code:: python
 
-	user = User.insert(name="John", location="Moon")
+	user = User.insert(name="Mardix", location="Moon")
 	
 	# or
 	
-	user = User(name="John", location="Moon").save()
+	user = User(name="Mardix", location="Moon").save()
 	
 	
 Get all records
@@ -187,14 +187,15 @@ Use all to select columns etc
 
 .. code:: python
 
-	all = User.all(User.name.distinct, User.location)
-	
+	all = User.all(User.name.distinct(), User.location)
+	for user in all:
+		print(user.login)
 	
 Use all for complete filter
 
 .. code:: python
 
-	all = User.all(User.name.distinct, User.location).order_by(User.updated_at.desc()).filter(User.location == "Charlotter")
+	all = User.all(User.name.distinct, User.location).order_by(User.updated_at.desc()).filter(User.location == "Charlotte")
 		
 **get(id, exclude_deleted=True)**
 
