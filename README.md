@@ -132,7 +132,8 @@ To start, create a model class and extends it with db.Model
 
 - Upon creation of the table, db.Model will add the following columns: ``id``, ``created_at``, ``upated_at``, ``is_deleted``, ``deleted_at``
 
-- It does an automatic table naming (if no table name is already defined using the ``__tablename__`` property)  by using the class name using the `inflection <http://inflection.readthedocs.org>`_ library. So, for example, a ``User`` model gets a table named ``user``, ``TodoList`` becomes ``todo_list``
+- It does an automatic table naming (if no table name is already defined using the ``__tablename__`` property)
+by using the class name. So, for example, a ``User`` model gets a table named ``user``, ``TodoList`` becomes ``todo_list``
 The name will not be plurialized.
 
 ---
@@ -421,5 +422,6 @@ ______
 
 ---
 
-:copyright: © 2014 
+:copyright: 2014
+
 :license: MIT, see LICENSE for more details.
