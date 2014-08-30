@@ -12,11 +12,9 @@
 
 """
 from math import ceil
-
 from ._compat import xrange, string_type
 
 DEFAULT_PER_PAGE = 10
-
 
 def sanitize_page_number(page):
     if page == 'last':

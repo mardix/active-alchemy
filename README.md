@@ -1,67 +1,67 @@
-===========================
-Active-SQLAlchemy
-===========================
 
-A framework-independent wrapper for SQLAlchemy that makes it really easy to use.
+#Active-SQLAlchemy
+
+**Version 0.2.***
+
+---
+
+Active-SQLAlchemy is a framework agnostic wrapper for SQLAlchemy that makes it really easy
+to use by implementing a simple active record like api, while it still uses the db.session underneath.
+Inspired by Flask-SQLAlchemy.
 
 Works with Python 2.6, 2.7, 3.3, 3.4 and pypy.
 
+---
 
-###Example:
+##Quick Overview:
 
-Create the model
+####Create the model
 
 
     from active_sqlalchemy import SQLAlchemy
 
     db = SQLAlchemy('pymysql+mysql://user:password@host:port/mydatabase')
 
-	class User(db.ActiveModel):
+	class User(db.Model):
 		name = db.Column(db.String(25))
 		location = db.Column(db.String(50), default="USA")
 		last_access = db.Column(db.Datetime)
 
-Insert new record
+
+####Create new record
 
 
-	user = User.insert(name="Mardix", location="Moon")
+	user = User.create(name="Mardix", location="Moon")
 	
 	# or
 	
 	user = User(name="Mardix", location="Moon").save()
 	
 	
-Get all records
-
-
+####Get all records
 
     all = User.all()
     
-Get a record by id
-
-
+    
+####Get a record by id
 
     user = User.get(1234)
 
-Update record
 
-
+####Update record
 
 	user = User.get(1234)
 	if user:
 		user.update(location="Neptune") 
 
-Soft Delete a record
 
-
+####Soft Delete a record
 
 	user = User.get(1234)
 	if user:
 		user.delete() 
 		
-To query
-
-
+####Query Records
 
     users = User.all(User.location.distinct())
 
@@ -69,8 +69,7 @@ To query
         ...
 
 
-To query with filter
-
+####Query with filter
 
 
     all = User.all().filter(User.location == "USA")
@@ -80,11 +79,10 @@ To query with filter
 
 
 
-How to use
-========================
+##How to use
 
-### Install
 
+#### Install
 
 
     pip install active_sqlalchemy
@@ -97,11 +95,10 @@ PIP install directly from Github
     pip install https://github.com/mardix/active-sqlalchemy/archive/master.zip
 
 
-### Create a connection 
+#### Create a connection 
 
 The SQLAlchemy class is used to instantiate a SQLAlchemy connection to
 a database.
-
 
 
     from active_sqlalchemy import SQLAlchemy
@@ -115,19 +112,17 @@ So you can declare models like this:
 
 ---
 
-## Create a Model
+### Create a Model
 
-To start, create a model class and extends it with db.ActiveModel
+To start, create a model class and extends it with db.Model
 
-
-
-	# model.py
+	# mymodel.py
 	
-    from sqlalchemy_wrapper2 import SQLAlchemy
+    from active_sqlachemy import SQLAlchemy
 
     db = SQLAlchemy("pymysql://user:pass@host:port/dbname")
     
-    class MyModel(db.ActiveModel):
+    class MyModel(db.Model):
     	name = db.Column(db.String(25))
     	is_live = db.Column(db.Boolean, default=False)
     	
@@ -135,47 +130,64 @@ To start, create a model class and extends it with db.ActiveModel
     db.create_all()
 
 
-- Upon creation of the table, db.ActiveModel will add the following columns: ``id``, ``created_at``, ``upated_at``, ``is_deleted``, ``deleted_at``
+- Upon creation of the table, db.Model will add the following columns: ``id``, ``created_at``, ``upated_at``, ``is_deleted``, ``deleted_at``
 
 - It does an automatic table naming (if no table name is already defined using the ``__tablename__`` property)  by using the class name using the `inflection <http://inflection.readthedocs.org>`_ library. So, for example, a ``User`` model gets a table named ``user``, ``TodoList`` becomes ``todo_list``
 The name will not be plurialized.
 
+---
 
-## db.ActiveModel
+## Models: *db.Model*
 
-**db.ActiveModel** extends the model with some cool helper method that will allow you to get, save, update in the current model instead of using ``db.session``. It turns the model into a 'quasi' active-record.
+**db.Model** extends your model with helpers that turn your model into an active record like model. But underneath, it still uses the ``db.session`` 
 
-**db.ActiveModel** also adds a few preset columns in the table: ``id``, ``created_at``, ``upated_at``, ``is_deleted``, ``deleted_at``
+**db.Model** also adds a few preset columns on the table: 
 
-**SOFT DELETE RECORD**: by default db.Model soft delete record by setting ``is_deleted`` to True using the method ``delete(delete_record=True)``. It also assign  the datetime  to ``deleted_at``. When ``delete(delete_record=False)`` is False, ``deleted_at`` will be set to None
+``id``: The primary key
 
-*Use db.ActiveModel for new tables that will have the same structure. It also offers a quasi active-record like on the records*
+``created_at``: Datetime. It contains the creation date of the record
+
+``updated_at``: Datetime. It is updated whenever the record is updated.
+
+``deleted_at``: Datetime. Contains the datetime the record was soft-deleted. 
+
+``is_deleted``: Boolean. A flag to set if record is soft-deleted or not
+
+**-- About Soft Delete --**
+
+By definition, soft-delete marks a record as deleted so it doesn't get queried, but it still exists in the database. To actually delete the record itself, a hard delete must apply. 
+
+By default, when a record is deleted, **Active-SQLAlchemy** actually sets ``is_deleted`` to True and excludes it from being queried, and ``deleted_at`` is also set. But this happens only when using the method ``db.Model.delete()``.
+
+When a record is soft-deleted, you can also undelete a record by doing: ``db.Model.delete(False)``
+
+Now, to totally delete off the table, ``db.Model.delete(hard_delete=True)``   
 
 
+**-- Querying with *db.Model.all()* --**
+
+Due to the fact that **Active-SQLAlchemy** has soft-delete, to query a model without the soft-deleted records, you must query your model by using the ``all(*args, **kwargs)`` which returns a db.session.query object for you to apply filter on etc.
 
 
-    class User(db.ActiveModel):
-        login = db.Column(db.Unicode, unique=True)
-        passw_hash = db.Column(db.Unicode)
-        profile_id = db.Column(db.Integer, db.ForeignKey(Profile.id))
-        profile = db.relationship(Profile, backref=db.backref('user'))
+**-- db.BaseModel --**
+
+By default ``db.Model`` adds several preset columns on the table, if you don't want to have them in your model, you can use instead ``db.BaseModel``, which still give you access to the methods to query your model.
 
 
-### Methods Description
-
-**all(exclude_deleted=True, \*args, \*\*kwargs)**
-
-Returns a ``session.query`` object to filter or apply more conditions. 
+---
 
 
+### db.Model Methods Description
+
+**all(\*args, \*\*kwargs)**
+
+Returns a ``db.session.query`` object to filter or apply more conditions. 
 
 	all = User.all()
 	for user in all:
 		print(user.login)
 
-By default all() will show only all non-soft-delete items. To display both deleted and non deleted items, add the arg: exclude_deleted=False
-
-
+By default all() will show only all non-soft-delete records. To display both deleted and non deleted items, add the arg: ``exclude_deleted=False``
 
 	all = User.all(exclude_deleted=False)
 	for user in all:
@@ -183,23 +195,17 @@ By default all() will show only all non-soft-delete items. To display both delet
 		
 Use all to select columns etc
 
-
-
 	all = User.all(User.name.distinct(), User.location)
 	for user in all:
 		print(user.login)
 	
 Use all for complete filter
 
-
-
 	all = User.all(User.name.distinct, User.location).order_by(User.updated_at.desc()).filter(User.location == "Charlotte")
 		
-**get(id, exclude_deleted=True)**
+**get(id)**
 
 Get one record by id. By default it will query only a record that is not soft-deleted
-
-
 
 	id = 1234
 	user = User.get(id)
@@ -207,30 +213,34 @@ Get one record by id. By default it will query only a record that is not soft-de
 	print(user.id)
 	print(user.login)
 
+To query a record that has been soft deleted, just set the argument ``exclude_deleted=False``
+
+	id = 234
+	user = User.get(id, exclude_deleted=False)
 		
 		
-**insert(\*\*kwargs)**
+**create(\*\*kwargs)**
 
-To insert new record. Same as init, but just a shortcut to it.
+To create/insert new record. Same as __init__, but just a shortcut to it.
 
-
-
-	record = User.insert(login='abc', passw_hash='hash', profile_id=123)
+	record = User.create(login='abc', passw_hash='hash', profile_id=123)
 	print (record.login) # -> abc
 
-or you can use the shortcut 
+or you can use the __init__ with save()
 
-
+	record = User(login='abc', passw_hash='hash', profile_id=123).save()
+	print (record.login) # -> abc
+	
+or 
 
 	record = User(login='abc', passw_hash='hash', profile_id=123)
 	record.save()
 	print (record.login) # -> abc
 	
+	
 **update(\*\*kwargs)**
 
 Update an existing record 
-
-
 
 	record = User.get(124)
 	record.update(login='new_login')
@@ -240,32 +250,26 @@ Update an existing record
 
 To soft delete a record. ``is_deleted`` will be set to True and ``deleted_at`` datetime will be set
 
-
-
 	record = User.get(124)
 	record.delete()
 	print (record.is_deleted) # -> True
 	
-To soft UNdelete a record. ``is_deleted`` will be set to False and ``deleted_at`` datetime will be set
-
+To soft UNdelete a record. ``is_deleted`` will be set to False and ``deleted_at`` datetime will be None
 
 
 	record = User.get(124)
 	record.delete(delete=False)
 	print (record.is_deleted) # -> False
 	
-To soft HARD delete a record. The record will be deleted completely
-
-
+To HARD delete a record. The record will be deleted completely
 
 	record = User.get(124)
 	record.delete(hard_delete=True)
 
+
 **save()**
 
 A shortcut to ``session.add`` + ``session.commit()``
-
-
 
 	record = User.get(124)
 	record.login = "Another one"
@@ -273,28 +277,35 @@ A shortcut to ``session.add`` + ``session.commit()``
 
 ---
 
+#### Method Chaining 
 
-### db.Model
+For convenience, some method chaining are available
 
-**db.Model** doesn't add any columns by default, but it will auto-create the ``__tablename__`` if it is not set.
+	user = User(name="Mardix", location="Charlotte").save()
+	
+	User.get(12345).update(location="Atlanta")
+	
+	User.get(345).delete().delete(False).update(location="St. Louis")
 
-*Use db.Model for existing table model, or when you don't need the preset columns*
+---
 
 
+#### Aggegated selects
 
-    class User(db.Model):
-    	id = db.Column(db.Integer, primary_key=True)
-        login = db.Column(db.Unicode, unique=True)
-        passw_hash = db.Column(db.Unicode)
-        profile_id = db.Column(db.Integer, db.ForeignKey(Profile.id))
-        profile = db.relationship(Profile, backref=db.backref('user'))
-        
----	
+	class Product(db.Model):
+    	name = db.Column(db.String(250))
+    	price = db.Column(db.Numeric)
+    	
+    results = Product.all(db.func.sum(Unit.price).label('price'))
 
-## Active SQLAlchemy With Web Application
 
-In a web application you need to call ``db.session.remove()`` after each response, and ``db.session.rollback()`` if an error occurs. However, if you are using Flask or other framework that uses the `after_request` and ``on_exception`` decorators, these bindings it is done automatically:
+---
 
+## With Web Application
+
+In a web application you need to call ``db.session.remove()`` after each response, and ``db.session.rollback()`` if an error occurs. However, if you are using Flask or other framework that uses the `after_request` and ``on_exception`` decorators, these bindings it is done automatically.
+
+For example using Flask, you can do:
 
 
     app = Flask(__name__)
@@ -302,8 +313,6 @@ In a web application you need to call ``db.session.remove()`` after each respons
     db = SQLAlchemy('sqlite://', app=app)
 
 or
-
-
 
     db = SQLAlchemy()
 
@@ -314,9 +323,7 @@ or
 
 ### More examples
 
-
-Many databases, one web app
-
+####Many databases, one web app
 
 
     app = Flask(__name__)
@@ -324,8 +331,7 @@ Many databases, one web app
     db2 = SQLAlchemy(URI2, app)
 
 
-Many web apps, one database
-
+####Many web apps, one database
 
 
     db = SQLAlchemy(URI1)
@@ -335,33 +341,12 @@ Many web apps, one database
     db.init_app(app1)
     db.init_app(app2)
 
+        
+---
 
-Aggegated selects
-
-
-
-    res = db.query(db.func.sum(Unit.price).label('price')).all()
-    print res.price
-
-
-Mixins
-
-
-
-    class IDMixin(object):
-        id = db.Column(db.Integer, primary_key=True)
-
-
-
-    class Model(IDMixin, db.Model):
-        field = db.Column(db.Unicode)
-
-
-### Pagination
+## Pagination
 
 All the results can be easily paginated
-
-
 
     users = User.paginate(page=2, per_page=20)
     print(list(users))  # [User(21), User(22), User(23), ... , User(40)]
@@ -425,6 +410,16 @@ This is one way how you could render such a pagination in your templates:
     {% endmacro %}
 
 ______
+
+####Credits:
+
+[SQLAlchemy](http://www.sqlalchemy.org/)
+
+[Flask-SQLAlchemy](https://pythonhosted.org/Flask-SQLAlchemy)
+
+[SQLAlchemy-Wrapper](https://github.com/lucuma/sqlalchemy-wrapper)
+
+---
 
 :copyright: © 2014 
 :license: MIT, see LICENSE for more details.

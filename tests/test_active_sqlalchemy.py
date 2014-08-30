@@ -6,7 +6,7 @@ class TestActiveSqlAlchemy(unittest.TestCase):
 
     @staticmethod
     def create_test_model(db):
-        class TestModel(db.ActiveModel):
+        class TestModel(db.Model):
             #__tablename__ = "test_model"
             name = db.Column(db.String(20))
             location = db.Column(db.String(20))
@@ -33,7 +33,7 @@ class TestActiveSqlAlchemy(unittest.TestCase):
     def test_get_table_name_when_unassigned(self):
         self.assertEquals("test_model", self.model.__table__.name)
 
-    def test_insert(self):
+    def test_create(self):
         data = {
             "name": "Jones",
             "location": "Miami"
@@ -43,7 +43,7 @@ class TestActiveSqlAlchemy(unittest.TestCase):
         v = self.add_entry()
         self.assertIs(1, len(list(self.model.all())))
 
-        e = v.insert(**data)
+        e = v.create(**data)
         self.assertIsNotNone(e)
         self.assertIs(2, len(list(self.model.all())))
 
@@ -132,6 +132,9 @@ class TestActiveSqlAlchemy(unittest.TestCase):
         es = self.model.all().paginate(page=2, per_page=4)
         self.assertIs(4, len(list(es)))
 
+
+class TestPagination(unittest.TestCase):
+    pass
 
 if __name__ == '__main__':
     unittest.main()
