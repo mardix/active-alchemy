@@ -3,29 +3,20 @@ b'This library requires Python 2.6, 2.7, 3.3, 3.4 or pypy'
 import io
 import os
 import re
+import active_sqlalchemy
 try:
     from setuptools import setup
 except ImportError:
     from distutils.core import setup
 
 
-PACKAGE = 'active_sqlalchemy'
-
+PACKAGE = active_sqlalchemy
 
 def get_path(*args):
     return os.path.join(os.path.dirname(__file__), *args)
 
-
-def read_from(filepath):
-    with io.open(filepath, 'rt', encoding='utf8') as f:
-        return f.read()
-
-
-def get_version():
-    data = read_from(get_path(PACKAGE, '__init__.py'))
-    version = re.search(r"__version__\s*=\s*u?'([^']+)'", data).group(1)
-    return str(version)
-
+def find_packages_data(*roots):
+    return dict([(root, find_package_data(root)) for root in roots])
 
 def find_package_data(root, include_files=('.gitignore', )):
     files = []
@@ -47,27 +38,18 @@ def find_package_data(root, include_files=('.gitignore', )):
     return files
 
 
-def find_packages_data(*roots):
-    return dict([(root, find_package_data(root)) for root in roots])
-
-
-def get_description():
-    data = read_from(get_path(PACKAGE, '__init__.py'))
-    desc = re.search('"""(.+)"""', data, re.DOTALL).group(1)
-    return desc.strip()
-
 setup(
-    name='Active-SQLAlchemy',
-    version=get_version(),
-    author='Mardix',
-    packages=[PACKAGE],
-    package_data=find_packages_data(PACKAGE, 'tests'),
+    name=PACKAGE.NAME,
+    version=PACKAGE.__version__,
+    author=PACKAGE.__author__,
+    packages=[PACKAGE.__name__],
+    package_data=find_packages_data(PACKAGE.__name__, 'tests'),
     zip_safe=False,
     url='http://mardix.github.io/active-sqlalchemy/',
     download_url='http://github.com/mardix/active-sqlalchemy/tarball/master',
     license='MIT license (http://www.opensource.org/licenses/mit-license.php)',
     description='A framework agnostic wrapper for SQLAlchemy that makes it really easy to use by implementing some activerecord like api',
-    long_description=get_description(),
+    long_description=PACKAGE.__doc__,
     install_requires=[
         "inflection>=0.2.0",
         "SQLAlchemy>=0.8",
@@ -87,3 +69,4 @@ setup(
         'Programming Language :: Python :: Implementation :: PyPy',
     ]
 )
+

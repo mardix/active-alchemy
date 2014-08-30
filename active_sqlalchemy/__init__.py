@@ -9,11 +9,14 @@ to use by implementing a simple active record like api, while it still uses the 
 
 :copyright: © 2014 by `Mardix`.
 :license: MIT, see LICENSE for more details.
+
 """
 
 NAME = "Active-SQLAlchemy"
-
 __version__ = '0.2.0'
+__author__ = "Mardix"
+__license__ = "MIT"
+__copyright__ = "2014 - Mardix"
 
 #-------------------------------------------------------------------------------
 
