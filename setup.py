@@ -63,7 +63,7 @@ setup(
     packages=[PACKAGE],
     package_data=find_packages_data(PACKAGE, 'tests'),
     zip_safe=False,
-    url='http://github.com/mardix/active-sqlalchemy',
+    url='http://mardix.github.io/active-sqlalchemy/',
     download_url='http://github.com/mardix/active-sqlalchemy/tarball/master',
     license='MIT license (http://www.opensource.org/licenses/mit-license.php)',
     description='A framework agnostic wrapper for SQLAlchemy that makes it really easy to use by implementing some activerecord like api',
