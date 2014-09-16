@@ -42,6 +42,7 @@ setup(
     name=PACKAGE.NAME,
     version=PACKAGE.__version__,
     author=PACKAGE.__author__,
+    author_email="mardix@github.com",
     packages=[PACKAGE.__name__],
     package_data=find_packages_data(PACKAGE.__name__, 'tests'),
     zip_safe=False,
