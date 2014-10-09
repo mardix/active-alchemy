@@ -53,7 +53,8 @@ setup(
     long_description=PACKAGE.__doc__,
     install_requires=[
         "inflection>=0.2.0",
-        "SQLAlchemy>=0.8"
+        "SQLAlchemy>=0.8",
+        "PyMySQL>=0.6.1"
     ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',
