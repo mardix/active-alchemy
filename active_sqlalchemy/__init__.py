@@ -13,7 +13,7 @@ to use by implementing a simple active record like api, while it still uses the 
 """
 
 NAME = "Active-SQLAlchemy"
-__version__ = '0.2.4'
+__version__ = '0.3.0'
 __author__ = "Mardix"
 __license__ = "MIT"
 __copyright__ = "2014 - Mardix"
@@ -170,7 +170,6 @@ class BaseModel(object):
             data[k] = v
         return json.dumps(data)
 
-
     @classmethod
     def get(cls, id):
         """
@@ -222,9 +221,10 @@ class BaseModel(object):
 
     def delete(self, delete=True, hard_delete=False):
         """
-        Soft delete a record
+        Soft delete a record 
         :param delete: Bool - To soft-delete/soft-undelete a record
-        :param hard_delete: Bool - If true it will completely delete the record
+        :param hard_delete: Bool - *** Not applicable under BaseModel 
+                            
         """
         try:
             self.db.session.delete(self)
@@ -232,6 +232,7 @@ class BaseModel(object):
         except Exception as e:
             self.db.rollback()
             raise
+
 
 class Model(IDMixin, BaseModel):
     """
@@ -243,34 +244,34 @@ class Model(IDMixin, BaseModel):
     deleted_at = Column(DateTime, default=None)
 
     @classmethod
-    def get(cls, id, exclude_deleted=True):
-        """
-        Select entry by id
-        :param id: The id of the entry
-        :param exclude_deleted: It should not query deleted record. Set to false to get all
-        """
-        query = cls.query(cls).filter(cls.id == id)
-        if exclude_deleted:
-            query = cls._exclude_deleted(query)
-        return query.first()
-
-    @classmethod
     def all(cls, *args, **kwargs):
         """
         :returns query:
-        """
-        _exclude_deleted = True
-        if "exclude_deleted" in kwargs:
-            _exclude_deleted = kwargs["exclude_deleted"]
-            del kwargs["exclude_deleted"]
 
+        :**kwargs:
+            - include_deleted bool: True To filter in deleted records.
+                                    By default it is set to False
+        """
         if not args:
             query = cls.query(cls)
         else:
             query = cls.query(*args)
-        if _exclude_deleted:
-            query = cls._exclude_deleted(query)
+
+        if "include_deleted" not in kwargs or kwargs["include_deleted"] is False:
+            query = query.filter(cls.is_deleted != True)
+
         return query
+
+    @classmethod
+    def get(cls, id, include_deleted=False):
+        """
+        Select entry by id
+        :param id: The id of the entry
+        :param include_deleted: It should not query deleted record. Set to True to get all
+        """
+        return cls.all(include_deleted=include_deleted)\
+                  .filter(cls.id == id)\
+                  .first()
 
     def delete(self, delete=True, hard_delete=False):
         """
@@ -293,14 +294,6 @@ class Model(IDMixin, BaseModel):
             }
             self.update(**data)
         return self
-
-    @classmethod
-    def _exclude_deleted(cls, query):
-        """
-        Add filter to exclude deleted items
-        """
-        query = query.filter(cls.is_deleted != True)
-        return query
 
 #-----------------
 

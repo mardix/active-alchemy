@@ -188,9 +188,9 @@ Returns a ``db.session.query`` object to filter or apply more conditions.
 	for user in all:
 		print(user.login)
 
-By default all() will show only all non-soft-delete records. To display both deleted and non deleted items, add the arg: ``exclude_deleted=False``
+By default all() will show only all non-soft-delete records. To display both deleted and non deleted items, add the arg: ``include_deleted=True``
 
-	all = User.all(exclude_deleted=False)
+	all = User.all(include_deleted=True)
 	for user in all:
 		print(user.login)
 		
@@ -214,10 +214,10 @@ Get one record by id. By default it will query only a record that is not soft-de
 	print(user.id)
 	print(user.login)
 
-To query a record that has been soft deleted, just set the argument ``exclude_deleted=False``
+To query a record that has been soft deleted, just set the argument ``include_deleted=True``
 
 	id = 234
-	user = User.get(id, exclude_deleted=False)
+	user = User.get(id, include_deleted=True)
 		
 		
 **create(\*\*kwargs)**

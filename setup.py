@@ -52,9 +52,9 @@ setup(
     description='A framework agnostic wrapper for SQLAlchemy that makes it really easy to use by implementing some activerecord like api',
     long_description=PACKAGE.__doc__,
     install_requires=[
-        "inflection>=0.2.0",
-        "SQLAlchemy>=0.8",
-        "PyMySQL>=0.6.1"
+        "inflection==0.2.1",
+        "SQLAlchemy==0.9.8",
+        "PyMySQL==0.6.1"
     ],
     classifiers=[
         'Development Status :: 5 - Production/Stable',

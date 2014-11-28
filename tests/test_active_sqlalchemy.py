@@ -72,7 +72,7 @@ class TestActiveSqlAlchemy(unittest.TestCase):
         e = self.add_entry()
         self.assertIs(1, len(list(self.model.all())))
         e.delete(hard_delete=True)
-        self.assertIs(0, len(list(self.model.all(exclude_deleted=False))))
+        self.assertIs(0, len(list(self.model.all(include_deleted=True))))
 
 
     def test_get(self):
@@ -82,7 +82,7 @@ class TestActiveSqlAlchemy(unittest.TestCase):
     def test_get_deleted(self):
         e = self.add_entry().delete()
         self.assertIsNone(self.model.get(e.id))
-        self.assertIsNotNone(self.model.get(e.id, exclude_deleted=False))
+        self.assertIsNotNone(self.model.get(e.id, include_deleted=True))
 
     def test_all(self):
         self.add_entry()
@@ -98,7 +98,6 @@ class TestActiveSqlAlchemy(unittest.TestCase):
         self.add_entry().delete()
         self.add_entry().delete()
         self.add_entry()
-
         self.assertIs(3, len(list(self.model.all())))
 
     def test_all_but_undeleted(self):
@@ -109,7 +108,7 @@ class TestActiveSqlAlchemy(unittest.TestCase):
         self.add_entry()
 
         self.assertIs(4, len(list(self.model.all())))
-        self.assertIs(5, len(list(self.model.all(exclude_deleted=False))))
+        self.assertIs(5, len(list(self.model.all(include_deleted=True))))
 
     def test_to_dict(self):
         e = self.add_entry()
