@@ -1,3 +1,0 @@
-include *.py *.txt *.md Makefile
-recursive-include active_sqlalchemy *
-recursive-include tests *

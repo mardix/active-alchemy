@@ -1,61 +1,43 @@
 # -*- coding: utf-8 -*-
-b'This library requires Python 2.6, 2.7, 3.3, 3.4 or pypy'
-import io
-import os
-import re
-import active_sqlalchemy
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+"""
+==================
+Active-SQLAlchemy
+==================
 
+A framework agnostic wrapper for SQLAlchemy that makes it really easy
+to use by implementing a simple active record like api, while it still uses the db.session underneath
 
-PACKAGE = active_sqlalchemy
+:copyright: © 2014/2015 by `Mardix`.
+:license: MIT, see LICENSE for more details.
 
-def get_path(*args):
-    return os.path.join(os.path.dirname(__file__), *args)
+"""
 
-def find_packages_data(*roots):
-    return dict([(root, find_package_data(root)) for root in roots])
+from setuptools import setup
 
-def find_package_data(root, include_files=('.gitignore', )):
-    files = []
-    src_root = get_path(root).rstrip('/') + '/'
-    for dirpath, subdirs, filenames in os.walk(src_root):
-        path, dirname = os.path.split(dirpath)
-        if dirname.startswith(('.', '_')):
-            continue
-        dirpath = dirpath.replace(src_root, '')
-        for filename in filenames:
-            is_valid_filename = not (
-                filename.startswith('.') or
-                filename.endswith('.pyc')
-            )
-            include_it_anyway = filename in include_files
-
-            if is_valid_filename or include_it_anyway:
-                files.append(os.path.join(dirpath, filename))
-    return files
-
+NAME = "Active-SQLAlchemy"
+py_module = "active_sqlalchemy"
+__version__ = '0.3.2'
+__author__ = "Mardix"
+__license__ = "MIT"
+__copyright__ = "2014/2015 - Mardix"
 
 setup(
-    name=PACKAGE.NAME,
-    version=PACKAGE.__version__,
-    author=PACKAGE.__author__,
-    author_email="mardix@github.com",
-    packages=[PACKAGE.__name__],
-    package_data=find_packages_data(PACKAGE.__name__, 'tests'),
-    zip_safe=False,
-    url='http://mardix.github.io/active-sqlalchemy/',
+    name=NAME,
+    version=__version__,
+    license=__license__,
+    author=__author__,
+    author_email='mardix@github.com',
+    description=__doc__,
+    long_description=__doc__,
+    url='http://github.com/mardix/active-sqlalchemy/',
     download_url='http://github.com/mardix/active-sqlalchemy/tarball/master',
-    license='MIT license (http://www.opensource.org/licenses/mit-license.php)',
-    description='A framework agnostic wrapper for SQLAlchemy that makes it really easy to use by implementing some activerecord like api',
-    long_description=PACKAGE.__doc__,
+    py_modules=[py_module],
     install_requires=[
-        "inflection==0.2.1",
         "SQLAlchemy==0.9.8",
         "PyMySQL==0.6.1"
     ],
+    keywords=['sqlalchemy', 'flask', 'active sqlalchemy', 'mysql', 'orm', 'active record'],
+    platforms='any',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Environment :: Web Environment',

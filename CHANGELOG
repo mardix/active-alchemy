@@ -1,4 +1,7 @@
 
+- 0.3.2
+    - Put active-sqlalchemy in one file. + some clean up
+
 - 0.3
     - change arg exclude_deleted to include_deleted with False as default value
     - Upgrade SQLAlchemy 0.9. Set absolute versioning of dependencies
