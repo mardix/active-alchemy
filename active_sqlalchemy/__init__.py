@@ -13,7 +13,7 @@ to use by implementing a simple active record like api, while it still uses the 
 """
 
 NAME = "Active-SQLAlchemy"
-__version__ = '0.3.0'
+__version__ = '0.3.1'
 __author__ = "Mardix"
 __license__ = "MIT"
 __copyright__ = "2014 - Mardix"
@@ -23,13 +23,20 @@ __copyright__ = "2014 - Mardix"
 import threading
 import json
 import datetime
-import inflection
-import sqlalchemy
-from sqlalchemy import *
-from sqlalchemy.orm import scoped_session, sessionmaker, Query
-from sqlalchemy.engine.url import make_url
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.schema import MetaData
+try:
+    import inflection
+except ImportError as ex:
+    print("'inflection' is missing")
+try:
+    import sqlalchemy
+    from sqlalchemy import *
+    from sqlalchemy.orm import scoped_session, sessionmaker, Query
+    from sqlalchemy.engine.url import make_url
+    from sqlalchemy.ext.declarative import declarative_base
+    from sqlalchemy.schema import MetaData
+except ImportError as ex:
+    print("'SQLAchemy' is missing")
+
 from .paginator import Paginator
 
 #----------------------------
