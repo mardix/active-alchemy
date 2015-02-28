@@ -16,7 +16,7 @@ from setuptools import setup
 
 NAME = "Active-SQLAlchemy"
 py_module = "active_sqlalchemy"
-__version__ = '0.3.2'
+__version__ = '0.3.3'
 __author__ = "Mardix"
 __license__ = "MIT"
 __copyright__ = "2014/2015 - Mardix"

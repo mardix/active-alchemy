@@ -169,7 +169,6 @@ class BaseModel(object):
         """Returns an iterable that supports .next()
         so we can do dict(sa_instance).
         """
-        print "I'm in"
         for k in self.__dict__.keys():
             if not k.startswith('_'):
                 yield (k, getattr(self, k))

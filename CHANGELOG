@@ -1,3 +1,5 @@
+- 0.3.3
+    - Remove print statement that should have not been there at all.
 
 - 0.3.2
     - Put active-sqlalchemy in one file. + some clean up
