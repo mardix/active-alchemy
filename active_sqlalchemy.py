@@ -77,10 +77,10 @@ def _sanitize_page_number(page):
         return page
     return 1
 
-def underscore(word):
+def _underscore(word):
     """
     Make an underscored, lowercase form from the expression in the string.
-    underscore('DeviceType') -> device_type
+    _underscore('DeviceType') -> device_type
     """
     word = re.sub(r"([A-Z]+)([A-Z][a-z])", r'\1_\2', word)
     word = re.sub(r"([a-z\d])([A-Z])", r'\1_\2', word)
@@ -125,7 +125,7 @@ class ModelTableNameDescriptor(object):
     def __get__(self, obj, type):
         tablename = type.__dict__.get('__tablename__')
         if not tablename:
-            tablename = underscore(type.__name__)
+            tablename = _underscore(type.__name__)
             setattr(type, '__tablename__', tablename)
         return tablename
 

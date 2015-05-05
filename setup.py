@@ -16,7 +16,7 @@ from setuptools import setup
 
 NAME = "Active-SQLAlchemy"
 py_module = "active_sqlalchemy"
-__version__ = '0.3.3'
+__version__ = '0.3.4'
 __author__ = "Mardix"
 __license__ = "MIT"
 __copyright__ = "2014/2015 - Mardix"
@@ -33,10 +33,9 @@ setup(
     download_url='http://github.com/mardix/active-sqlalchemy/tarball/master',
     py_modules=[py_module],
     install_requires=[
-        "SQLAlchemy==0.9.8",
-        "PyMySQL==0.6.1"
+        "SQLAlchemy==0.9.8"
     ],
-    keywords=['sqlalchemy', 'flask', 'active sqlalchemy', 'mysql', 'orm', 'active record'],
+    keywords=['sqlalchemy', 'flask', 'active sqlalchemy', 'orm', 'active record'],
     platforms='any',
     classifiers=[
         'Development Status :: 5 - Production/Stable',

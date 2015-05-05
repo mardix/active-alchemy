@@ -1,3 +1,6 @@
+- 0.3.4
+    - Refactoring
+    - Prefix underscore with underscore
 - 0.3.3
     - Remove print statement that should have not been there at all.
 

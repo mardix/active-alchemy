@@ -20,7 +20,7 @@ Works with Python 2.6, 2.7, 3.3, 3.4 and pypy.
 
     from active_sqlalchemy import SQLAlchemy
 
-    db = SQLAlchemy('pymysql+mysql://user:password@host:port/mydatabase')
+    db = SQLAlchemy('sqlite://')
 
 	class User(db.Model):
 		name = db.Column(db.String(25))
@@ -88,13 +88,6 @@ Works with Python 2.6, 2.7, 3.3, 3.4 and pypy.
     pip install active_sqlalchemy
 
 
-PIP install directly from Github
-
-
-
-    pip install https://github.com/mardix/active-sqlalchemy/archive/master.zip
-
-
 #### Create a connection 
 
 The SQLAlchemy class is used to instantiate a SQLAlchemy connection to
@@ -120,7 +113,7 @@ To start, create a model class and extends it with db.Model
 	
     from active_sqlachemy import SQLAlchemy
 
-    db = SQLAlchemy("pymysql://user:pass@host:port/dbname")
+    db = SQLAlchemy("sqlite://")
     
     class MyModel(db.Model):
     	name = db.Column(db.String(25))
@@ -422,6 +415,6 @@ ______
 
 ---
 
-:copyright: 2014
+copyright: 2015
 
-:license: MIT, see LICENSE for more details.
+license: MIT, see LICENSE for more details.

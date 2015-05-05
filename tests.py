@@ -1,6 +1,7 @@
 from active_sqlalchemy import SQLAlchemy
 import unittest
 
+table_name = "test_model"
 
 class TestActiveSqlAlchemy(unittest.TestCase):
 
@@ -30,8 +31,8 @@ class TestActiveSqlAlchemy(unittest.TestCase):
         e = self.add_entry()
         self.assertIsNotNone(e)
 
-    def test_get_table_name_when_unassigned(self):
-        self.assertEquals("test_model", self.model.__table__.name)
+    def test_table_name(self):
+        self.assertEquals(table_name, self.model.__table__.name)
 
     def test_create(self):
         data = {
@@ -130,10 +131,6 @@ class TestActiveSqlAlchemy(unittest.TestCase):
 
         es = self.model.all().paginate(page=2, per_page=4)
         self.assertIs(4, len(list(es)))
-
-
-class TestPagination(unittest.TestCase):
-    pass
 
 if __name__ == '__main__':
     unittest.main()
