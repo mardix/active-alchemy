@@ -82,13 +82,13 @@ Works with Python 2.6, 2.7, 3.3, 3.4 and pypy.
 ##How to use
 
 
-#### Install
+### Install
 
 
     pip install active_sqlalchemy
 
 
-#### Create a connection 
+### Create a connection 
 
 The SQLAlchemy class is used to instantiate a SQLAlchemy connection to
 a database.
@@ -96,14 +96,44 @@ a database.
 
     from active_sqlalchemy import SQLAlchemy
 
-    db = SQLAlchemy(_uri_to_database_)
+    db = SQLAlchemy(dialect+driver://username:password@host:port/database)
 
+#### Databases Drivers & DB Connection examples
 
-The class also provides access to all the SQLAlchemy
-functions from the ``sqlalchemy`` and ``sqlalchemy.orm`` modules.
-So you can declare models like this:
+Active-SQLAlchemy comes with a `PyMySQL` and `PG8000` as drivers for MySQL 
+and PostgreSQL respectively, because they are in pure Python. But you can use 
+other drivers for better performance. `SQLite` is already built in Python. 
+  
+
+**SQLite:**
+
+    from active_sqlalchemy import SQLAlchemy
+
+    db = SQLAlchemy("sqlite://") # in memory
+    
+    # or 
+    
+    db = SQLAlchemy("sqlite:///foo.db") # DB file
+    
+**PostgreSql:**
+
+    from active_sqlalchemy import SQLAlchemy
+
+    db = SQLAlchemy("postgresql+pg8000://user:password@host:port/dbname")
+
+**PyMySQL:**
+
+    from active_sqlalchemy import SQLAlchemy
+
+    db = SQLAlchemy("mysql+pymysql://user:password@host:port/dbname")
 
 ---
+
+
+Active-SQLAlchemy also provides access to all the SQLAlchemy
+functions from the ``sqlalchemy`` and ``sqlalchemy.orm`` modules.
+So you can declare models like the following examples:
+
 
 ### Create a Model
 
