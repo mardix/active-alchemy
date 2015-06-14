@@ -1,4 +1,4 @@
-from active_sqlalchemy import SQLAlchemy
+from active_alchemy import SQLAlchemy
 import unittest
 
 table_name = "test_model"
@@ -130,7 +130,8 @@ class TestActiveSqlAlchemy(unittest.TestCase):
             self.add_entry()
 
         es = self.model.all().paginate(page=2, per_page=4)
-        self.assertIs(4, len(list(es)))
+        self.assertIs(4, es.total_pages)
+
 
 if __name__ == '__main__':
     unittest.main()

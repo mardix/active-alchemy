@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 ==================
-Active-SQLAlchemy
+Active-Alchemy
 ==================
 
 A framework agnostic wrapper for SQLAlchemy that makes it really easy
@@ -14,9 +14,9 @@ to use by implementing a simple active record like api, while it still uses the 
 
 from setuptools import setup
 
-NAME = "Active-SQLAlchemy"
-py_module = "active_sqlalchemy"
-__version__ = '0.3.5'
+NAME = "Active-Alchemy"
+py_module = "active_alchemy"
+__version__ = '0.4.0'
 __author__ = "Mardix"
 __license__ = "MIT"
 __copyright__ = "2014/2015 - Mardix"
@@ -29,13 +29,14 @@ setup(
     author_email='mardix@github.com',
     description=__doc__,
     long_description=__doc__,
-    url='http://github.com/mardix/active-sqlalchemy/',
-    download_url='http://github.com/mardix/active-sqlalchemy/tarball/master',
+    url='http://github.com/mardix/active-alchemy/',
+    download_url='http://github.com/mardix/active-alchemy/tarball/master',
     py_modules=[py_module],
     install_requires=[
         "SQLAlchemy==0.9.8",
         "PyMySQL==0.6.6",
-        "pg8000==1.10.2"
+        "pg8000==1.10.2",
+        "Paginator==0.2.0"
     ],
     keywords=['sqlalchemy', 'flask', 'active sqlalchemy', 'orm', 'active record',
               'mysql', 'postgresql', 'pymysql', 'pg8000', 'sqlite'],
@@ -54,4 +55,3 @@ setup(
         'Programming Language :: Python :: Implementation :: PyPy',
     ]
 )
-

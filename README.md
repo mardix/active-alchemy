@@ -1,11 +1,11 @@
 
-#Active-SQLAlchemy
+#Active-Alchemy
 
-**Version 0.3.***
+**Version 0.4.***
 
 ---
 
-Active-SQLAlchemy is a framework agnostic wrapper for SQLAlchemy that makes it really easy
+Active-Alchemy is a framework agnostic wrapper for SQLAlchemy that makes it really easy
 to use by implementing a simple active record like api, while it still uses the db.session underneath.
 Inspired by Flask-SQLAlchemy.
 
@@ -18,7 +18,7 @@ Works with Python 2.6, 2.7, 3.3, 3.4 and pypy.
 ####Create the model
 
 
-    from active_sqlalchemy import SQLAlchemy
+    from active_alchemy import SQLAlchemy
 
     db = SQLAlchemy('sqlite://')
 
@@ -85,7 +85,7 @@ Works with Python 2.6, 2.7, 3.3, 3.4 and pypy.
 ### Install
 
 
-    pip install active_sqlalchemy
+    pip install active_alchemy
 
 
 ### Create a connection 
@@ -94,20 +94,20 @@ The SQLAlchemy class is used to instantiate a SQLAlchemy connection to
 a database.
 
 
-    from active_sqlalchemy import SQLAlchemy
+    from active_alchemy import SQLAlchemy
 
     db = SQLAlchemy(dialect+driver://username:password@host:port/database)
 
 #### Databases Drivers & DB Connection examples
 
-Active-SQLAlchemy comes with a `PyMySQL` and `PG8000` as drivers for MySQL 
+Active-Alchemy comes with a `PyMySQL` and `PG8000` as drivers for MySQL 
 and PostgreSQL respectively, because they are in pure Python. But you can use 
 other drivers for better performance. `SQLite` is already built in Python. 
   
 
 **SQLite:**
 
-    from active_sqlalchemy import SQLAlchemy
+    from active_alchemy import SQLAlchemy
 
     db = SQLAlchemy("sqlite://") # in memory
     
@@ -117,20 +117,20 @@ other drivers for better performance. `SQLite` is already built in Python.
     
 **PostgreSql:**
 
-    from active_sqlalchemy import SQLAlchemy
+    from active_alchemy import SQLAlchemy
 
     db = SQLAlchemy("postgresql+pg8000://user:password@host:port/dbname")
 
 **PyMySQL:**
 
-    from active_sqlalchemy import SQLAlchemy
+    from active_alchemy import SQLAlchemy
 
     db = SQLAlchemy("mysql+pymysql://user:password@host:port/dbname")
 
 ---
 
 
-Active-SQLAlchemy also provides access to all the SQLAlchemy
+Active-Alchemy also provides access to all the SQLAlchemy
 functions from the ``sqlalchemy`` and ``sqlalchemy.orm`` modules.
 So you can declare models like the following examples:
 
@@ -141,7 +141,7 @@ To start, create a model class and extends it with db.Model
 
 	# mymodel.py
 	
-    from active_sqlachemy import SQLAlchemy
+    from active_alchemy import SQLAlchemy
 
     db = SQLAlchemy("sqlite://")
     
@@ -181,7 +181,7 @@ The name will not be plurialized.
 
 By definition, soft-delete marks a record as deleted so it doesn't get queried, but it still exists in the database. To actually delete the record itself, a hard delete must apply. 
 
-By default, when a record is deleted, **Active-SQLAlchemy** actually sets ``is_deleted`` to True and excludes it from being queried, and ``deleted_at`` is also set. But this happens only when using the method ``db.Model.delete()``.
+By default, when a record is deleted, **Active-Alchemy** actually sets ``is_deleted`` to True and excludes it from being queried, and ``deleted_at`` is also set. But this happens only when using the method ``db.Model.delete()``.
 
 When a record is soft-deleted, you can also undelete a record by doing: ``db.Model.delete(False)``
 
@@ -190,7 +190,7 @@ Now, to totally delete off the table, ``db.Model.delete(hard_delete=True)``
 
 **-- Querying with *db.Model.all()* --**
 
-Due to the fact that **Active-SQLAlchemy** has soft-delete, to query a model without the soft-deleted records, you must query your model by using the ``all(*args, **kwargs)`` which returns a db.session.query object for you to apply filter on etc.
+Due to the fact that **Active-Alchemy** has soft-delete, to query a model without the soft-deleted records, you must query your model by using the ``all(*args, **kwargs)`` which returns a db.session.query object for you to apply filter on etc.
 
 
 **-- db.BaseModel --**
@@ -400,37 +400,43 @@ This is one way how you could render such a pagination in your templates:
 
 
 
-    {% macro render_paginator(paginator, endpoint) %}
-      <p>Showing {{ paginator.showing }} or {{ paginator.total }}</p>
-
-      <ol class="paginator">
-      {%- if paginator.has_prev %}
-        <li><a href="{{ url_for(endpoint, page=paginator.prev_num) }}"
-         rel="me prev">«</a></li>
-      {% else %}
-        <li class="disabled"><span>«</span></li>
-      {%- endif %}
-
-      {%- for page in paginator.pages %}
-        {% if page %}
-          {% if page != paginator.page %}
-            <li><a href="{{ url_for(endpoint, page=page) }}"
-             rel="me">{{ page }}</a></li>
-          {% else %}
-            <li class="current"><span>{{ page }}</span></li>
-          {% endif %}
-        {% else %}
-          <li><span class=ellipsis>…</span></li>
+    {% macro pagination(paginator, endpoint=None, class_='pagination') %}
+        {% if not endpoint %}
+            {% set endpoint = request.endpoint %}
         {% endif %}
-      {%- endfor %}
-
-      {%- if paginator.has_next %}
-        <li><a href="{{ url_for(endpoint, page=paginator.next_num) }}"
-         rel="me next">»</a></li>
-      {% else %}
-        <li class="disabled"><span>»</span></li>
-      {%- endif %}
-      </ol>
+        {% if "page" in kwargs %}
+            {% do kwargs.pop("page") %}
+        {% endif %}
+        <nav>
+            <ul class="{{ class_ }}">
+              {%- if paginator.has_prev %}
+                <li><a href="{{ url_for(endpoint, page=paginator.prev_page_number, **kwargs) }}"
+                 rel="me prev"><span aria-hidden="true">&laquo;</span></a></li>
+              {% else %}
+                <li class="disabled"><span><span aria-hidden="true">&laquo;</span></span></li>
+              {%- endif %}
+    
+              {%- for page in paginator.pages %}
+                {% if page %}
+                  {% if page != paginator.page %}
+                    <li><a href="{{ url_for(endpoint, page=page, **kwargs) }}"
+                     rel="me">{{ page }}</a></li>
+                  {% else %}
+                    <li class="active"><span>{{ page }}</span></li>
+                  {% endif %}
+                {% else %}
+                  <li><span class=ellipsis>…</span></li>
+                {% endif %}
+              {%- endfor %}
+    
+              {%- if paginator.has_next %}
+                <li><a href="{{ url_for(endpoint, page=paginator.next_page_number, **kwargs) }}"
+                 rel="me next">»</a></li>
+              {% else %}
+                <li class="disabled"><span aria-hidden="true">&raquo;</span></li>
+              {%- endif %}
+            </ul>
+        </nav>
     {% endmacro %}
 
 ______
