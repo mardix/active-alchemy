@@ -16,7 +16,7 @@ from setuptools import setup
 
 NAME = "Active-Alchemy"
 py_module = "active_alchemy"
-__version__ = '0.4.0'
+__version__ = '0.4.1'
 __author__ = "Mardix"
 __license__ = "MIT"
 __copyright__ = "2014/2015 - Mardix"
@@ -36,7 +36,8 @@ setup(
         "SQLAlchemy==0.9.8",
         "PyMySQL==0.6.6",
         "pg8000==1.10.2",
-        "Paginator==0.2.0"
+        "Paginator==0.2.0",
+        "inflection==0.3.1"
     ],
     keywords=['sqlalchemy', 'flask', 'active sqlalchemy', 'orm', 'active record',
               'mysql', 'postgresql', 'pymysql', 'pg8000', 'sqlite'],

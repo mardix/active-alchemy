@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 ==================
-Active-SQLAlchemy
+Active-Alchemy
 ==================
 
 A framework agnostic wrapper for SQLAlchemy that makes it really easy
@@ -12,12 +12,10 @@ to use by implementing a simple active record like api, while it still uses the 
 
 """
 
-NAME = "Active-SQLAlchemy"
+NAME = "Active-Alchemy"
 
 # ------------------------------------------------------------------------------
 
-import sys
-import re
 import threading
 import json
 import datetime
@@ -27,18 +25,8 @@ from sqlalchemy.orm import scoped_session, sessionmaker, Query
 from sqlalchemy.engine.url import make_url
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import MetaData
-from math import ceil
 from paginator import Paginator
-
-# _compat
-PY2 = sys.version_info[0] == 2
-if PY2:
-    string_type = (basestring, )
-    xrange = xrange
-else:
-    string_type = str
-    xrange = range
-
+import inflection
 
 DEFAULT_PER_PAGE = 10
 
@@ -68,25 +56,6 @@ def _include_sqlalchemy(db):
     db.Table = _tablemaker(db)
     db.event = sqlalchemy.event
 
-
-def _sanitize_page_number(page):
-    if page == 'last':
-        return page
-    if isinstance(page, string_type) and page.isdigit():
-        page = int(page)
-    if isinstance(page, int) and (page > 0):
-        return page
-    return 1
-
-def _underscore(word):
-    """
-    Make an underscored, lowercase form from the expression in the string.
-    _underscore('DeviceType') -> device_type
-    """
-    word = re.sub(r"([A-Z]+)([A-Z][a-z])", r'\1_\2', word)
-    word = re.sub(r"([a-z\d])([A-Z])", r'\1_\2', word)
-    word = word.replace("-", "_")
-    return word.lower()
 
 class BaseQuery(Query):
 
@@ -126,7 +95,7 @@ class ModelTableNameDescriptor(object):
     def __get__(self, obj, type):
         tablename = type.__dict__.get('__tablename__')
         if not tablename:
-            tablename = _underscore(type.__name__)
+            tablename = inflection.underscore(type.__name__)
             setattr(type, '__tablename__', tablename)
         return tablename
 

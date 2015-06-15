@@ -1,12 +1,18 @@
+- 0.4.1
+    - Added library inflection
+    - cleanup code
 
 - 0.4.0
     - rename to Active-Alchemy
     - Use the module Paginator for pagination
+
 - 0.3.5
     - Added PyMySQL and PG8000 as default drivers
+
 - 0.3.4
     - Refactoring
     - Prefix underscore with underscore
+
 - 0.3.3
     - Remove print statement that should have not been there at all.
 
