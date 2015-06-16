@@ -16,7 +16,7 @@ from setuptools import setup
 
 NAME = "Active-Alchemy"
 py_module = "active_alchemy"
-__version__ = '0.4.1'
+__version__ = '0.4.2'
 __author__ = "Mardix"
 __license__ = "MIT"
 __copyright__ = "2014/2015 - Mardix"
@@ -26,7 +26,7 @@ setup(
     version=__version__,
     license=__license__,
     author=__author__,
-    author_email='mardix@github.com',
+    author_email='mardix@pylot.io',
     description=__doc__,
     long_description=__doc__,
     url='http://github.com/mardix/active-alchemy/',
@@ -36,7 +36,7 @@ setup(
         "SQLAlchemy==0.9.8",
         "PyMySQL==0.6.6",
         "pg8000==1.10.2",
-        "Paginator==0.2.0",
+        "Paginator==0.2.1",
         "inflection==0.3.1"
     ],
     keywords=['sqlalchemy', 'flask', 'active sqlalchemy', 'orm', 'active record',
