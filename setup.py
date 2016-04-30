@@ -7,7 +7,7 @@ Active-Alchemy
 A framework agnostic wrapper for SQLAlchemy that makes it really easy
 to use by implementing a simple active record like api, while it still uses the db.session underneath
 
-:copyright: © 2014/2015 by `Mardix`.
+:copyright: © 2014/2016 by `Mardix`.
 :license: MIT, see LICENSE for more details.
 
 """
@@ -16,10 +16,10 @@ from setuptools import setup
 
 NAME = "Active-Alchemy"
 py_module = "active_alchemy"
-__version__ = '0.4.4'
+__version__ = '0.10.0'
 __author__ = "Mardix"
 __license__ = "MIT"
-__copyright__ = "2014/2015 - Mardix"
+__copyright__ = "2014/2016 - Mardix"
 
 setup(
     name=NAME,
@@ -33,7 +33,7 @@ setup(
     download_url='http://github.com/mardix/active-alchemy/tarball/master',
     py_modules=[py_module],
     install_requires=[
-        "SQLAlchemy==0.9.8",
+        "SQLAlchemy==1.0.12",
         "PyMySQL==0.6.6",
         "pg8000==1.10.2",
         "Paginator",

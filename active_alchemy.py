@@ -7,7 +7,7 @@ Active-Alchemy
 A framework agnostic wrapper for SQLAlchemy that makes it really easy
 to use by implementing a simple active record like api, while it still uses the db.session underneath
 
-:copyright: © 2014 by `Mardix`.
+:copyright: © 2014/2016 by `Mardix`.
 :license: MIT, see LICENSE for more details.
 
 """
@@ -121,19 +121,13 @@ class EngineConnector(object):
             return engine
 
 
-class IDMixin(object):
-    """
-    A mixin to add an id
-    """
-    id = Column(Integer, primary_key=True)
-
-
 class BaseModel(object):
     """
     Baseclass for custom user models.
     """
 
     __tablename__ = ModelTableNameDescriptor()
+    __primary_key__ = "id"  # String
 
     def __iter__(self):
         """Returns an iterable that supports .next()
@@ -166,12 +160,12 @@ class BaseModel(object):
         return json.dumps(data)
 
     @classmethod
-    def get(cls, id):
+    def get(cls, pk):
         """
-        Select entry by id
-        :param id: The id of the entry
+        Select entry by its primary key. It must be define as
+        __primary_key__ (string)
         """
-        return cls.query(cls).filter(cls.id == id).first()
+        return cls._query(cls).filter(getattr(cls, cls.__primary_key__) == pk).first()
 
     @classmethod
     def create(cls, **kwargs):
@@ -191,15 +185,16 @@ class BaseModel(object):
         self.save()
         return self
 
+
     @classmethod
-    def all(cls, *args):
+    def query(cls, *args):
         """
         :returns query:
         """
         if not args:
-            query = cls.query(cls)
+            query = cls._query(cls)
         else:
-            query = cls.query(*args)
+            query = cls._query(*args)
         return query
 
     def save(self):
@@ -228,18 +223,18 @@ class BaseModel(object):
             self.db.rollback()
             raise
 
-
-class Model(IDMixin, BaseModel):
+class Model(BaseModel):
     """
     Model create
     """
+    id = Column(Integer, primary_key=True)
     created_at = Column(DateTime, default=func.now())
     updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
     is_deleted = Column(Boolean, default=False, index=True)
     deleted_at = Column(DateTime, default=None)
 
     @classmethod
-    def all(cls, *args, **kwargs):
+    def query(cls, *args, **kwargs):
         """
         :returns query:
 
@@ -248,9 +243,9 @@ class Model(IDMixin, BaseModel):
                                     By default it is set to False
         """
         if not args:
-            query = cls.query(cls)
+            query = cls._query(cls)
         else:
-            query = cls.query(*args)
+            query = cls._query(*args)
 
         if "include_deleted" not in kwargs or kwargs["include_deleted"] is False:
             query = query.filter(cls.is_deleted != True)
@@ -264,7 +259,7 @@ class Model(IDMixin, BaseModel):
         :param id: The id of the entry
         :param include_deleted: It should not query deleted record. Set to True to get all
         """
-        return cls.all(include_deleted=include_deleted)\
+        return cls.query(include_deleted=include_deleted)\
                   .filter(cls.id == id)\
                   .first()
 
@@ -291,11 +286,11 @@ class Model(IDMixin, BaseModel):
         return self
 
 
-class SQLAlchemy(object):
+class ActiveAlchemy(object):
     """This class is used to instantiate a SQLAlchemy connection to
     a database.
 
-        db = SQLAlchemy(_uri_to_database_)
+        db = ActiveAlchemy(_uri_to_database_)
 
     The class also provides access to all the SQLAlchemy
     functions from the :mod:`sqlalchemy` and :mod:`sqlalchemy.orm` modules.
@@ -311,11 +306,11 @@ class SQLAlchemy(object):
     decorators, just pass that object at creation::
 
         app = Flask(__name__)
-        db = SQLAlchemy('sqlite://', app=app)
+        db = ActiveAlchemy('sqlite://', app=app)
 
     or later::
 
-        db = SQLAlchemy()
+        db = ActiveAlchemy()
 
         app = Flask(__name__)
         db.init_app(app)
@@ -355,7 +350,7 @@ class SQLAlchemy(object):
         self.BaseModel = declarative_base(cls=BaseModel, name='BaseModel')
 
         self.Model.db, self.BaseModel.db = self, self
-        self.Model.query, self.BaseModel.query = self.session.query, self.session.query
+        self.Model._query, self.BaseModel._query = self.session.query, self.session.query
 
         if app is not None:
             self.init_app(app)
@@ -455,12 +450,10 @@ class SQLAlchemy(object):
     def create_all(self):
         """Creates all tables. """
         self.Model.metadata.create_all(bind=self.engine)
-        self.BaseModel.metadata.create_all(bind=self.engine)
 
     def drop_all(self):
         """Drops all tables. """
         self.Model.metadata.drop_all(bind=self.engine)
-        self.BaseModel.metadata.drop_all(bind=self.engine)
 
     def reflect(self, meta=None):
         """Reflects tables from the database. """

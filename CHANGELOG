@@ -1,3 +1,11 @@
+- 0.10.0
+    - Change name from SQLAlchemy to ActiveAlchemy
+    - Replace method 'all()' with 'query()'
+    - access the base query with '_query()'
+    - Remove class IDMixin. Add 'id' column in 'Model'
+    - BaseModel must define the '__primary_key__'
+    - Use SQLAlchemy 1.0.*
+
 - 0.4.4
     - Bump version. Remove version off Paginator
 

@@ -1,15 +1,28 @@
 
 #Active-Alchemy
 
-**Version 0.4.***
+**Version 0.10.***
 
 ---
 
-Active-Alchemy is a framework agnostic wrapper for SQLAlchemy that makes it really easy
-to use by implementing a simple active record like api, while it still uses the db.session underneath.
-Inspired by Flask-SQLAlchemy.
+Active-Alchemy is wrapper around SQLAlchemy that makes it simple to use 
+your models in an active record like manner, while it still uses the SQLAlchemy `db.session` underneath.
 
-Works with Python 2.6, 2.7, 3.3, 3.4 and pypy.
+Active-Alchemy was created as solution to use my flask's application's model 
+without the need to use Flask-SQLAlchemy outside of Flask projects.
+
+
+What you may like about Active-Alchemy:
+
+- Just by instantiating with `ActiveAlchemy()`, ActiveAlchemy automatically creates
+the session, model and everything necessary for SQLAlchemy.
+- It provides easy methods such as `query()`, `create()`, `update()`, `delete()`,
+ to select, create, update, delete entries respectively.   
+- It automatically create a primary key for your table
+- It adds the following columns: `id`, `created_at`, `updated_at`, `is_deleted`, `deleted_at`
+- When `delete()`, it soft deletes the entry so it doesn't get queried. But it still
+exists in the database. This feature allows you to un-delete an entry
+- It is still SQLAlchemy. You can access all the SQLAlchemy awesomeness
 
 ---
 
@@ -17,43 +30,47 @@ Works with Python 2.6, 2.7, 3.3, 3.4 and pypy.
 
 ####Create the model
 
+    from active_alchemy import ActiveAlchemy
 
-    from active_alchemy import SQLAlchemy
-
-    db = SQLAlchemy('sqlite://')
+    db = ActiveAlchemy('sqlite://')
 
 	class User(db.Model):
 		name = db.Column(db.String(25))
 		location = db.Column(db.String(50), default="USA")
 		last_access = db.Column(db.Datetime)
 
+	
+####Retrieve all records
 
+    for user in User.query():
+        print(user.name)
+    
+    
 ####Create new record
-
 
 	user = User.create(name="Mardix", location="Moon")
 	
 	# or
 	
 	user = User(name="Mardix", location="Moon").save()
-	
-	
-####Get all records
 
-    all = User.all()
     
-    
-####Get a record by id
+####Get a record by primary key (id)
 
     user = User.get(1234)
 
 
-####Update record
+####Update record from primary key
 
 	user = User.get(1234)
 	if user:
 		user.update(location="Neptune") 
 
+####Update record from query iteration
+
+	for user in User.query():
+		user.update(last_access=db.func.now());
+		
 
 ####Soft Delete a record
 
@@ -63,7 +80,7 @@ Works with Python 2.6, 2.7, 3.3, 3.4 and pypy.
 		
 ####Query Records
 
-    users = User.all(User.location.distinct())
+    users = User.query(User.location.distinct())
 
     for user in users:
         ...
@@ -72,11 +89,10 @@ Works with Python 2.6, 2.7, 3.3, 3.4 and pypy.
 ####Query with filter
 
 
-    all = User.all().filter(User.location == "USA")
+    all = User.query().filter(User.location == "USA")
 
     for user in users:
         ...
-
 
 
 ##How to use
@@ -90,13 +106,13 @@ Works with Python 2.6, 2.7, 3.3, 3.4 and pypy.
 
 ### Create a connection 
 
-The SQLAlchemy class is used to instantiate a SQLAlchemy connection to
+The `ActiveAlchemy` class is used to instantiate a SQLAlchemy connection to
 a database.
 
 
-    from active_alchemy import SQLAlchemy
+    from active_alchemy import ActiveAlchemy
 
-    db = SQLAlchemy(dialect+driver://username:password@host:port/database)
+    db = ActiveAlchemy(dialect+driver://username:password@host:port/database)
 
 #### Databases Drivers & DB Connection examples
 
@@ -107,25 +123,25 @@ other drivers for better performance. `SQLite` is already built in Python.
 
 **SQLite:**
 
-    from active_alchemy import SQLAlchemy
+    from active_alchemy import ActiveAlchemy
 
-    db = SQLAlchemy("sqlite://") # in memory
+    db = ActiveAlchemy("sqlite://") # in memory
     
     # or 
     
-    db = SQLAlchemy("sqlite:///foo.db") # DB file
+    db = ActiveAlchemy("sqlite:///foo.db") # DB file
     
 **PostgreSql:**
 
-    from active_alchemy import SQLAlchemy
+    from active_alchemy import ActiveAlchemy
 
-    db = SQLAlchemy("postgresql+pg8000://user:password@host:port/dbname")
+    db = ActiveAlchemy("postgresql+pg8000://user:password@host:port/dbname")
 
 **PyMySQL:**
 
-    from active_alchemy import SQLAlchemy
+    from active_alchemy import ActiveAlchemy
 
-    db = SQLAlchemy("mysql+pymysql://user:password@host:port/dbname")
+    db = ActiveAlchemy("mysql+pymysql://user:password@host:port/dbname")
 
 ---
 
@@ -141,9 +157,9 @@ To start, create a model class and extends it with db.Model
 
 	# mymodel.py
 	
-    from active_alchemy import SQLAlchemy
+    from active_alchemy import ActiveAlchemy
 
-    db = SQLAlchemy("sqlite://")
+    db = ActiveAlchemy("sqlite://")
     
     class MyModel(db.Model):
     	name = db.Column(db.String(25))
@@ -185,10 +201,10 @@ By default, when a record is deleted, **Active-Alchemy** actually sets ``is_dele
 
 When a record is soft-deleted, you can also undelete a record by doing: ``db.Model.delete(False)``
 
-Now, to totally delete off the table, ``db.Model.delete(hard_delete=True)``   
+Now, to completely delete off the table, ``db.Model.delete(hard_delete=True)``   
 
 
-**-- Querying with *db.Model.all()* --**
+**-- Querying with *db.Model.query()* --**
 
 Due to the fact that **Active-Alchemy** has soft-delete, to query a model without the soft-deleted records, you must query your model by using the ``all(*args, **kwargs)`` which returns a db.session.query object for you to apply filter on etc.
 
@@ -197,35 +213,44 @@ Due to the fact that **Active-Alchemy** has soft-delete, to query a model withou
 
 By default ``db.Model`` adds several preset columns on the table, if you don't want to have them in your model, you can use instead ``db.BaseModel``, which still give you access to the methods to query your model.
 
+``BaseModel`` by default assumes that your primary key is ``id``, but it 
+
+    class MyExistingModel(db.BaseModel):
+        __tablename__ = "my_old_table"
+        __primary_key__  = "my_pk_id"
+        
+        my_pk_id = db.Column(db.Integer, primary_key=True)
+        name = db.Column(db.String)
+        ...
 
 ---
 
 
 ### db.Model Methods Description
 
-**all(\*args, \*\*kwargs)**
+**query(\*args, \*\*kwargs)**
 
 Returns a ``db.session.query`` object to filter or apply more conditions. 
 
-	all = User.all()
+	all = User.query()
 	for user in all:
 		print(user.login)
 
-By default all() will show only all non-soft-delete records. To display both deleted and non deleted items, add the arg: ``include_deleted=True``
+By default `query()` will show only all non-soft-delete records. To display both deleted and non deleted items, add the arg: ``include_deleted=True``
 
-	all = User.all(include_deleted=True)
+	all = User.query(include_deleted=True)
 	for user in all:
 		print(user.login)
 		
 Use all to select columns etc
 
-	all = User.all(User.name.distinct(), User.location)
+	all = User.query(User.name.distinct(), User.location)
 	for user in all:
 		print(user.login)
 	
 Use all for complete filter
 
-	all = User.all(User.name.distinct, User.location).order_by(User.updated_at.desc()).filter(User.location == "Charlotte")
+	all = User.query(User.name.distinct, User.location).order_by(User.updated_at.desc()).filter(User.location == "Charlotte")
 		
 **get(id)**
 
