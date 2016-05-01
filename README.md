@@ -228,37 +228,36 @@ By default ``db.Model`` adds several preset columns on the table, if you don't w
 
 ### db.Model Methods Description
 
-**query(\*args, \*\*kwargs)**
+#### query(\*args, \*\*kwargs)
 
-Returns a ``db.session.query`` object to filter or apply more conditions. 
+To start querying the DB and returns a ``db.session.query`` object to filter or apply more conditions.
 
-	all = User.query()
-	for user in all:
+	for user in User.query():
 		print(user.login)
 
 By default `query()` will show only all non-soft-delete records. To display both deleted and non deleted items, add the arg: ``include_deleted=True``
 
-	all = User.query(include_deleted=True)
-	for user in all:
+	for user in User.query(include_deleted=True):
 		print(user.login)
 		
-Use all to select columns etc
+To select columns...
 
-	all = User.query(User.name.distinct(), User.location)
-	for user in all:
+	for user in User.query(User.name.distinct(), User.location):
 		print(user.login)
 	
-Use all for complete filter
+To use with filter...
 
-	all = User.query(User.name.distinct, User.location).order_by(User.updated_at.desc()).filter(User.location == "Charlotte")
+	all = User
+	        .query(User.name.distinct, User.location)
+	        .order_by(User.updated_at.desc())
+	        .filter(User.location == "Charlotte")
 		
-**get(id)**
+#### get(id)
 
 Get one record by id. By default it will query only a record that is not soft-deleted
 
 	id = 1234
 	user = User.get(id)
-
 	print(user.id)
 	print(user.login)
 
@@ -268,7 +267,7 @@ To query a record that has been soft deleted, just set the argument ``include_de
 	user = User.get(id, include_deleted=True)
 		
 		
-**create(\*\*kwargs)**
+#### create(\*\*kwargs)
 
 To create/insert new record. Same as __init__, but just a shortcut to it.
 
@@ -287,7 +286,7 @@ or
 	print (record.login) # -> abc
 	
 	
-**update(\*\*kwargs)**
+#### update(\*\*kwargs)
 
 Update an existing record 
 
@@ -295,7 +294,7 @@ Update an existing record
 	record.update(login='new_login')
 	print (record.login) # -> new_login
 
-**delete()**
+#### delete()
 
 To soft delete a record. ``is_deleted`` will be set to True and ``deleted_at`` datetime will be set
 
@@ -303,7 +302,7 @@ To soft delete a record. ``is_deleted`` will be set to True and ``deleted_at`` d
 	record.delete()
 	print (record.is_deleted) # -> True
 	
-To soft UNdelete a record. ``is_deleted`` will be set to False and ``deleted_at`` datetime will be None
+To soft **UNdelete** a record. ``is_deleted`` will be set to False and ``deleted_at`` datetime will be None
 
 
 	record = User.get(124)
@@ -316,7 +315,7 @@ To HARD delete a record. The record will be deleted completely
 	record.delete(hard_delete=True)
 
 
-**save()**
+#### save()
 
 A shortcut to ``session.add`` + ``session.commit()``
 
@@ -345,8 +344,8 @@ For convenience, some method chaining are available
     	name = db.Column(db.String(250))
     	price = db.Column(db.Numeric)
     	
-    results = Product.all(db.func.sum(Unit.price).label('price'))
-
+    price_label = db.func.sum(Product.price).label('price')
+    results = Product.query(price_label)
 
 ---
 
@@ -359,11 +358,11 @@ For example using Flask, you can do:
 
     app = Flask(__name__)
 
-    db = SQLAlchemy('sqlite://', app=app)
+    db = ActiveAlchemy('sqlite://', app=app)
 
 or
 
-    db = SQLAlchemy()
+    db = ActiveAlchemy()
 
     app = Flask(__name__)
 
@@ -376,14 +375,14 @@ or
 
 
     app = Flask(__name__)
-    db1 = SQLAlchemy(URI1, app)
-    db2 = SQLAlchemy(URI2, app)
+    db1 = ActiveAlchemy(URI1, app)
+    db2 = ActiveAlchemy(URI2, app)
 
 
 ####Many web apps, one database
 
 
-    db = SQLAlchemy(URI1)
+    db = ActiveAlchemy(URI1)
 
     app1 = Flask(__name__)
     app2 = Flask(__name__)
@@ -402,7 +401,6 @@ All the results can be easily paginated
 
 
 The paginator object it's an iterable that returns only the results for that page, so you use it in your templates in the same way than the original result:
-
 
 
     {% for item in paginated_items %}
@@ -474,8 +472,10 @@ ______
 
 [SQLAlchemy-Wrapper](https://github.com/lucuma/sqlalchemy-wrapper)
 
+[Paginator](https://github.com/mardix/paginator.py)
+
 ---
 
-copyright: 2015
+copyright: 2015-2016
 
 license: MIT, see LICENSE for more details.
