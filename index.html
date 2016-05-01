@@ -1,71 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=640">
-
-    <link rel="stylesheet" href="stylesheets/core.css" media="screen">
-    <link rel="stylesheet" href="stylesheets/mobile.css" media="handheld, only screen and (max-device-width:640px)">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-
-    <script type="text/javascript" src="javascripts/modernizr.js"></script>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript" src="javascripts/headsmart.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function () {
-        $('#main_content').headsmart()
-      })
-    </script>
+    <meta charset="UTF-8">
     <title>Active-sqlalchemy by mardix</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
   </head>
-
   <body>
-    <a id="forkme_banner" href="https://github.com/mardix/active-sqlalchemy">View on GitHub</a>
-    <div class="shell">
+    <section class="page-header">
+      <h1 class="project-name">Active-sqlalchemy</h1>
+      <h2 class="project-tagline">Active-SQLAlchemy is a framework agnostic wrapper for SQLAlchemy that makes it really easy to use by implementing a simple active record like api, while it still uses the db.session underneath. Inspired by Flask-SQLAlchemy</h2>
+      <a href="https://github.com/mardix/active-alchemy" class="btn">View on GitHub</a>
+      <a href="https://github.com/mardix/active-alchemy/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/mardix/active-alchemy/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-      <header>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <h1>Active-sqlalchemy</h1>
-            <h2>Active-SQLAlchemy is a framework agnostic wrapper for SQLAlchemy that makes it really easy to use by implementing a simple active record like api, while it still uses the db.session underneath. Inspired by Flask-SQLAlchemy</h2>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-      </header>
+    <section class="main-content">
+      <h1>
+<a id="active-alchemy" class="anchor" href="#active-alchemy" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Active-Alchemy</h1>
 
-      <section id="downloads">
-        <span class="inner">
-          <a href="https://github.com/mardix/active-sqlalchemy/zipball/master" class="zip"><em>download</em> .ZIP</a><a href="https://github.com/mardix/active-sqlalchemy/tarball/master" class="tgz"><em>download</em> .TGZ</a>
-        </span>
-      </section>
+<p><strong>Version 0.10.</strong>*</p>
 
+<hr>
 
-      <span class="banner-fix"></span>
+<p>Active-Alchemy is wrapper around SQLAlchemy that makes it simple to use 
+your models in an active record like manner, while it still uses the SQLAlchemy <code>db.session</code> underneath.</p>
 
+<p>Active-Alchemy was created as solution to use my flask's application's model 
+without the need to use Flask-SQLAlchemy outside of Flask projects.</p>
 
-      <section id="main_content">
-        <h1>
-<a name="active-sqlalchemy" class="anchor" href="#active-sqlalchemy"><span class="octicon octicon-link"></span></a>Active-SQLAlchemy</h1>
+<p>What you may like about Active-Alchemy:</p>
 
-<p><strong>Version 0.2.*</strong></p>
+<ul>
+<li>Just by instantiating with <code>ActiveAlchemy()</code>, ActiveAlchemy automatically creates
+the session, model and everything necessary for SQLAlchemy.</li>
+<li>It provides easy methods such as <code>query()</code>, <code>create()</code>, <code>update()</code>, <code>delete()</code>,
+to select, create, update, delete entries respectively.<br>
+</li>
+<li>It automatically create a primary key for your table</li>
+<li>It adds the following columns: <code>id</code>, <code>created_at</code>, <code>updated_at</code>, <code>is_deleted</code>, <code>deleted_at</code>
+</li>
+<li>When <code>delete()</code>, it soft deletes the entry so it doesn't get queried. But it still
+exists in the database. This feature allows you to un-delete an entry</li>
+<li>It is still SQLAlchemy. You can access all the SQLAlchemy awesomeness</li>
+</ul>
 
-<hr><p>Active-SQLAlchemy is a framework agnostic wrapper for SQLAlchemy that makes it really easy
-to use by implementing a simple active record like api, while it still uses the db.session underneath.
-Inspired by Flask-SQLAlchemy.</p>
+<hr>
 
-<p>Works with Python 2.6, 2.7, 3.3, 3.4 and pypy.</p>
-
-<hr><h2>
-<a name="quick-overview" class="anchor" href="#quick-overview"><span class="octicon octicon-link"></span></a>Quick Overview:</h2>
+<h2>
+<a id="quick-overview" class="anchor" href="#quick-overview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Quick Overview:</h2>
 
 <h4>
-<a name="create-the-model" class="anchor" href="#create-the-model"><span class="octicon octicon-link"></span></a>Create the model</h4>
+<a id="create-the-model" class="anchor" href="#create-the-model" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create the model</h4>
 
-<pre><code>from active_sqlalchemy import SQLAlchemy
+<pre><code>from active_alchemy import ActiveAlchemy
 
-db = SQLAlchemy('pymysql+mysql://user:password@host:port/mydatabase')
+db = ActiveAlchemy('sqlite://')
 
 class User(db.Model):
     name = db.Column(db.String(25))
@@ -74,7 +67,14 @@ class User(db.Model):
 </code></pre>
 
 <h4>
-<a name="create-new-record" class="anchor" href="#create-new-record"><span class="octicon octicon-link"></span></a>Create new record</h4>
+<a id="retrieve-all-records" class="anchor" href="#retrieve-all-records" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Retrieve all records</h4>
+
+<pre><code>for user in User.query():
+    print(user.name)
+</code></pre>
+
+<h4>
+<a id="create-new-record" class="anchor" href="#create-new-record" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create new record</h4>
 
 <pre><code>user = User.create(name="Mardix", location="Moon")
 
@@ -84,19 +84,13 @@ user = User(name="Mardix", location="Moon").save()
 </code></pre>
 
 <h4>
-<a name="get-all-records" class="anchor" href="#get-all-records"><span class="octicon octicon-link"></span></a>Get all records</h4>
-
-<pre><code>all = User.all()
-</code></pre>
-
-<h4>
-<a name="get-a-record-by-id" class="anchor" href="#get-a-record-by-id"><span class="octicon octicon-link"></span></a>Get a record by id</h4>
+<a id="get-a-record-by-primary-key-id" class="anchor" href="#get-a-record-by-primary-key-id" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Get a record by primary key (id)</h4>
 
 <pre><code>user = User.get(1234)
 </code></pre>
 
 <h4>
-<a name="update-record" class="anchor" href="#update-record"><span class="octicon octicon-link"></span></a>Update record</h4>
+<a id="update-record-from-primary-key" class="anchor" href="#update-record-from-primary-key" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Update record from primary key</h4>
 
 <pre><code>user = User.get(1234)
 if user:
@@ -104,7 +98,14 @@ if user:
 </code></pre>
 
 <h4>
-<a name="soft-delete-a-record" class="anchor" href="#soft-delete-a-record"><span class="octicon octicon-link"></span></a>Soft Delete a record</h4>
+<a id="update-record-from-query-iteration" class="anchor" href="#update-record-from-query-iteration" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Update record from query iteration</h4>
+
+<pre><code>for user in User.query():
+    user.update(last_access=db.func.now());
+</code></pre>
+
+<h4>
+<a id="soft-delete-a-record" class="anchor" href="#soft-delete-a-record" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Soft Delete a record</h4>
 
 <pre><code>user = User.get(1234)
 if user:
@@ -112,62 +113,91 @@ if user:
 </code></pre>
 
 <h4>
-<a name="query-records" class="anchor" href="#query-records"><span class="octicon octicon-link"></span></a>Query Records</h4>
+<a id="query-records" class="anchor" href="#query-records" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Query Records</h4>
 
-<pre><code>users = User.all(User.location.distinct())
+<pre><code>users = User.query(User.location.distinct())
 
 for user in users:
     ...
 </code></pre>
 
 <h4>
-<a name="query-with-filter" class="anchor" href="#query-with-filter"><span class="octicon octicon-link"></span></a>Query with filter</h4>
+<a id="query-with-filter" class="anchor" href="#query-with-filter" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Query with filter</h4>
 
-<pre><code>all = User.all().filter(User.location == "USA")
+<pre><code>all = User.query().filter(User.location == "USA")
 
 for user in users:
     ...
 </code></pre>
 
 <h2>
-<a name="how-to-use" class="anchor" href="#how-to-use"><span class="octicon octicon-link"></span></a>How to use</h2>
+<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to use</h2>
 
-<h4>
-<a name="install" class="anchor" href="#install"><span class="octicon octicon-link"></span></a>Install</h4>
+<h3>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install</h3>
 
-<pre><code>pip install active_sqlalchemy
+<pre><code>pip install active_alchemy
 </code></pre>
 
-<p>PIP install directly from Github</p>
+<h3>
+<a id="create-a-connection" class="anchor" href="#create-a-connection" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create a connection</h3>
 
-<pre><code>pip install https://github.com/mardix/active-sqlalchemy/archive/master.zip
-</code></pre>
-
-<h4>
-<a name="create-a-connection" class="anchor" href="#create-a-connection"><span class="octicon octicon-link"></span></a>Create a connection</h4>
-
-<p>The SQLAlchemy class is used to instantiate a SQLAlchemy connection to
+<p>The <code>ActiveAlchemy</code> class is used to instantiate a SQLAlchemy connection to
 a database.</p>
 
-<pre><code>from active_sqlalchemy import SQLAlchemy
+<pre><code>from active_alchemy import ActiveAlchemy
 
-db = SQLAlchemy(_uri_to_database_)
+db = ActiveAlchemy(dialect+driver://username:password@host:port/database)
 </code></pre>
 
-<p>The class also provides access to all the SQLAlchemy
-functions from the <code>sqlalchemy</code> and <code>sqlalchemy.orm</code> modules.
-So you can declare models like this:</p>
+<h4>
+<a id="databases-drivers--db-connection-examples" class="anchor" href="#databases-drivers--db-connection-examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Databases Drivers &amp; DB Connection examples</h4>
 
-<hr><h3>
-<a name="create-a-model" class="anchor" href="#create-a-model"><span class="octicon octicon-link"></span></a>Create a Model</h3>
+<p>Active-Alchemy comes with a <code>PyMySQL</code> and <code>PG8000</code> as drivers for MySQL 
+and PostgreSQL respectively, because they are in pure Python. But you can use 
+other drivers for better performance. <code>SQLite</code> is already built in Python. </p>
+
+<p><strong>SQLite:</strong></p>
+
+<pre><code>from active_alchemy import ActiveAlchemy
+
+db = ActiveAlchemy("sqlite://") # in memory
+
+# or 
+
+db = ActiveAlchemy("sqlite:///foo.db") # DB file
+</code></pre>
+
+<p><strong>PostgreSql:</strong></p>
+
+<pre><code>from active_alchemy import ActiveAlchemy
+
+db = ActiveAlchemy("postgresql+pg8000://user:password@host:port/dbname")
+</code></pre>
+
+<p><strong>PyMySQL:</strong></p>
+
+<pre><code>from active_alchemy import ActiveAlchemy
+
+db = ActiveAlchemy("mysql+pymysql://user:password@host:port/dbname")
+</code></pre>
+
+<hr>
+
+<p>Active-Alchemy also provides access to all the SQLAlchemy
+functions from the <code>sqlalchemy</code> and <code>sqlalchemy.orm</code> modules.
+So you can declare models like the following examples:</p>
+
+<h3>
+<a id="create-a-model" class="anchor" href="#create-a-model" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create a Model</h3>
 
 <p>To start, create a model class and extends it with db.Model</p>
 
 <pre><code># mymodel.py
 
-from active_sqlachemy import SQLAlchemy
+from active_alchemy import ActiveAlchemy
 
-db = SQLAlchemy("pymysql://user:pass@host:port/dbname")
+db = ActiveAlchemy("sqlite://")
 
 class MyModel(db.Model):
     name = db.Column(db.String(25))
@@ -182,8 +212,12 @@ db.create_all()
 <li><p>It does an automatic table naming (if no table name is already defined using the <code>__tablename__</code> property)
 by using the class name. So, for example, a <code>User</code> model gets a table named <code>user</code>, <code>TodoList</code> becomes <code>todo_list</code>
 The name will not be plurialized.</p></li>
-</ul><hr><h2>
-<a name="models-dbmodel" class="anchor" href="#models-dbmodel"><span class="octicon octicon-link"></span></a>Models: <em>db.Model</em>
+</ul>
+
+<hr>
+
+<h2>
+<a id="models-dbmodel" class="anchor" href="#models-dbmodel" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Models: <em>db.Model</em>
 </h2>
 
 <p><strong>db.Model</strong> extends your model with helpers that turn your model into an active record like model. But underneath, it still uses the <code>db.session</code> </p>
@@ -204,69 +238,84 @@ The name will not be plurialized.</p></li>
 
 <p>By definition, soft-delete marks a record as deleted so it doesn't get queried, but it still exists in the database. To actually delete the record itself, a hard delete must apply. </p>
 
-<p>By default, when a record is deleted, <strong>Active-SQLAlchemy</strong> actually sets <code>is_deleted</code> to True and excludes it from being queried, and <code>deleted_at</code> is also set. But this happens only when using the method <code>db.Model.delete()</code>.</p>
+<p>By default, when a record is deleted, <strong>Active-Alchemy</strong> actually sets <code>is_deleted</code> to True and excludes it from being queried, and <code>deleted_at</code> is also set. But this happens only when using the method <code>db.Model.delete()</code>.</p>
 
 <p>When a record is soft-deleted, you can also undelete a record by doing: <code>db.Model.delete(False)</code></p>
 
-<p>Now, to totally delete off the table, <code>db.Model.delete(hard_delete=True)</code>   </p>
+<p>Now, to completely delete off the table, <code>db.Model.delete(hard_delete=True)</code>   </p>
 
-<p><strong>-- Querying with <em>db.Model.all()</em> --</strong></p>
+<p><strong>-- Querying with <em>db.Model.query()</em> --</strong></p>
 
-<p>Due to the fact that <strong>Active-SQLAlchemy</strong> has soft-delete, to query a model without the soft-deleted records, you must query your model by using the <code>all(*args, **kwargs)</code> which returns a db.session.query object for you to apply filter on etc.</p>
+<p>Due to the fact that <strong>Active-Alchemy</strong> has soft-delete, to query a model without the soft-deleted records, you must query your model by using the <code>all(*args, **kwargs)</code> which returns a db.session.query object for you to apply filter on etc.</p>
 
 <p><strong>-- db.BaseModel --</strong></p>
 
 <p>By default <code>db.Model</code> adds several preset columns on the table, if you don't want to have them in your model, you can use instead <code>db.BaseModel</code>, which still give you access to the methods to query your model.</p>
 
-<hr><h3>
-<a name="dbmodel-methods-description" class="anchor" href="#dbmodel-methods-description"><span class="octicon octicon-link"></span></a>db.Model Methods Description</h3>
+<p><code>BaseModel</code> by default assumes that your primary key is <code>id</code>, but it </p>
 
-<p><strong>all(*args, **kwargs)</strong></p>
+<pre><code>class MyExistingModel(db.BaseModel):
+    __tablename__ = "my_old_table"
+    __primary_key__  = "my_pk_id"
 
-<p>Returns a <code>db.session.query</code> object to filter or apply more conditions. </p>
+    my_pk_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    ...
+</code></pre>
 
-<pre><code>all = User.all()
-for user in all:
+<hr>
+
+<h3>
+<a id="dbmodel-methods-description" class="anchor" href="#dbmodel-methods-description" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>db.Model Methods Description</h3>
+
+<h4>
+<a id="queryargs-kwargs" class="anchor" href="#queryargs-kwargs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>query(*args, **kwargs)</h4>
+
+<p>To start querying the DB and returns a <code>db.session.query</code> object to filter or apply more conditions.</p>
+
+<pre><code>for user in User.query():
     print(user.login)
 </code></pre>
 
-<p>By default all() will show only all non-soft-delete records. To display both deleted and non deleted items, add the arg: <code>exclude_deleted=False</code></p>
+<p>By default <code>query()</code> will show only all non-soft-delete records. To display both deleted and non deleted items, add the arg: <code>include_deleted=True</code></p>
 
-<pre><code>all = User.all(exclude_deleted=False)
-for user in all:
+<pre><code>for user in User.query(include_deleted=True):
     print(user.login)
 </code></pre>
 
-<p>Use all to select columns etc</p>
+<p>To select columns...</p>
 
-<pre><code>all = User.all(User.name.distinct(), User.location)
-for user in all:
+<pre><code>for user in User.query(User.name.distinct(), User.location):
     print(user.login)
 </code></pre>
 
-<p>Use all for complete filter</p>
+<p>To use with filter...</p>
 
-<pre><code>all = User.all(User.name.distinct, User.location).order_by(User.updated_at.desc()).filter(User.location == "Charlotte")
+<pre><code>all = User
+        .query(User.name.distinct, User.location)
+        .order_by(User.updated_at.desc())
+        .filter(User.location == "Charlotte")
 </code></pre>
 
-<p><strong>get(id)</strong></p>
+<h4>
+<a id="getid" class="anchor" href="#getid" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>get(id)</h4>
 
 <p>Get one record by id. By default it will query only a record that is not soft-deleted</p>
 
 <pre><code>id = 1234
 user = User.get(id)
-
 print(user.id)
 print(user.login)
 </code></pre>
 
-<p>To query a record that has been soft deleted, just set the argument <code>exclude_deleted=False</code></p>
+<p>To query a record that has been soft deleted, just set the argument <code>include_deleted=True</code></p>
 
 <pre><code>id = 234
-user = User.get(id, exclude_deleted=False)
+user = User.get(id, include_deleted=True)
 </code></pre>
 
-<p><strong>create(**kwargs)</strong></p>
+<h4>
+<a id="createkwargs" class="anchor" href="#createkwargs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>create(**kwargs)</h4>
 
 <p>To create/insert new record. Same as <strong>init</strong>, but just a shortcut to it.</p>
 
@@ -287,7 +336,8 @@ record.save()
 print (record.login) # -&gt; abc
 </code></pre>
 
-<p><strong>update(**kwargs)</strong></p>
+<h4>
+<a id="updatekwargs" class="anchor" href="#updatekwargs" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>update(**kwargs)</h4>
 
 <p>Update an existing record </p>
 
@@ -296,7 +346,8 @@ record.update(login='new_login')
 print (record.login) # -&gt; new_login
 </code></pre>
 
-<p><strong>delete()</strong></p>
+<h4>
+<a id="delete" class="anchor" href="#delete" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>delete()</h4>
 
 <p>To soft delete a record. <code>is_deleted</code> will be set to True and <code>deleted_at</code> datetime will be set</p>
 
@@ -305,7 +356,7 @@ record.delete()
 print (record.is_deleted) # -&gt; True
 </code></pre>
 
-<p>To soft UNdelete a record. <code>is_deleted</code> will be set to False and <code>deleted_at</code> datetime will be None</p>
+<p>To soft <strong>UNdelete</strong> a record. <code>is_deleted</code> will be set to False and <code>deleted_at</code> datetime will be None</p>
 
 <pre><code>record = User.get(124)
 record.delete(delete=False)
@@ -318,7 +369,8 @@ print (record.is_deleted) # -&gt; False
 record.delete(hard_delete=True)
 </code></pre>
 
-<p><strong>save()</strong></p>
+<h4>
+<a id="save" class="anchor" href="#save" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>save()</h4>
 
 <p>A shortcut to <code>session.add</code> + <code>session.commit()</code></p>
 
@@ -327,8 +379,10 @@ record.login = "Another one"
 record.save()
 </code></pre>
 
-<hr><h4>
-<a name="method-chaining" class="anchor" href="#method-chaining"><span class="octicon octicon-link"></span></a>Method Chaining</h4>
+<hr>
+
+<h4>
+<a id="method-chaining" class="anchor" href="#method-chaining" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Method Chaining</h4>
 
 <p>For convenience, some method chaining are available</p>
 
@@ -339,18 +393,23 @@ User.get(12345).update(location="Atlanta")
 User.get(345).delete().delete(False).update(location="St. Louis")
 </code></pre>
 
-<hr><h4>
-<a name="aggegated-selects" class="anchor" href="#aggegated-selects"><span class="octicon octicon-link"></span></a>Aggegated selects</h4>
+<hr>
+
+<h4>
+<a id="aggegated-selects" class="anchor" href="#aggegated-selects" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Aggegated selects</h4>
 
 <pre><code>class Product(db.Model):
     name = db.Column(db.String(250))
     price = db.Column(db.Numeric)
 
-results = Product.all(db.func.sum(Unit.price).label('price'))
+price_label = db.func.sum(Product.price).label('price')
+results = Product.query(price_label)
 </code></pre>
 
-<hr><h2>
-<a name="with-web-application" class="anchor" href="#with-web-application"><span class="octicon octicon-link"></span></a>With Web Application</h2>
+<hr>
+
+<h2>
+<a id="with-web-application" class="anchor" href="#with-web-application" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>With Web Application</h2>
 
 <p>In a web application you need to call <code>db.session.remove()</code> after each response, and <code>db.session.rollback()</code> if an error occurs. However, if you are using Flask or other framework that uses the <code>after_request</code> and <code>on_exception</code> decorators, these bindings it is done automatically.</p>
 
@@ -358,12 +417,12 @@ results = Product.all(db.func.sum(Unit.price).label('price'))
 
 <pre><code>app = Flask(__name__)
 
-db = SQLAlchemy('sqlite://', app=app)
+db = ActiveAlchemy('sqlite://', app=app)
 </code></pre>
 
 <p>or</p>
 
-<pre><code>db = SQLAlchemy()
+<pre><code>db = ActiveAlchemy()
 
 app = Flask(__name__)
 
@@ -371,20 +430,20 @@ db.init_app(app)
 </code></pre>
 
 <h3>
-<a name="more-examples" class="anchor" href="#more-examples"><span class="octicon octicon-link"></span></a>More examples</h3>
+<a id="more-examples" class="anchor" href="#more-examples" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>More examples</h3>
 
 <h4>
-<a name="many-databases-one-web-app" class="anchor" href="#many-databases-one-web-app"><span class="octicon octicon-link"></span></a>Many databases, one web app</h4>
+<a id="many-databases-one-web-app" class="anchor" href="#many-databases-one-web-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Many databases, one web app</h4>
 
 <pre><code>app = Flask(__name__)
-db1 = SQLAlchemy(URI1, app)
-db2 = SQLAlchemy(URI2, app)
+db1 = ActiveAlchemy(URI1, app)
+db2 = ActiveAlchemy(URI2, app)
 </code></pre>
 
 <h4>
-<a name="many-web-apps-one-database" class="anchor" href="#many-web-apps-one-database"><span class="octicon octicon-link"></span></a>Many web apps, one database</h4>
+<a id="many-web-apps-one-database" class="anchor" href="#many-web-apps-one-database" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Many web apps, one database</h4>
 
-<pre><code>db = SQLAlchemy(URI1)
+<pre><code>db = ActiveAlchemy(URI1)
 
 app1 = Flask(__name__)
 app2 = Flask(__name__)
@@ -392,8 +451,10 @@ db.init_app(app1)
 db.init_app(app2)
 </code></pre>
 
-<hr><h2>
-<a name="pagination" class="anchor" href="#pagination"><span class="octicon octicon-link"></span></a>Pagination</h2>
+<hr>
+
+<h2>
+<a id="pagination" class="anchor" href="#pagination" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Pagination</h2>
 
 <p>All the results can be easily paginated</p>
 
@@ -420,42 +481,50 @@ print(list(users))  # [User(21), User(22), User(23), ... , User(40)]
 
 <p>This is one way how you could render such a pagination in your templates:</p>
 
-<pre><code>{% macro render_paginator(paginator, endpoint) %}
-  &lt;p&gt;Showing {{ paginator.showing }} or {{ paginator.total }}&lt;/p&gt;
-
-  &lt;ol class="paginator"&gt;
-  {%- if paginator.has_prev %}
-    &lt;li&gt;&lt;a href="{{ url_for(endpoint, page=paginator.prev_num) }}"
-     rel="me prev"&gt;«&lt;/a&gt;&lt;/li&gt;
-  {% else %}
-    &lt;li class="disabled"&gt;&lt;span&gt;«&lt;/span&gt;&lt;/li&gt;
-  {%- endif %}
-
-  {%- for page in paginator.pages %}
-    {% if page %}
-      {% if page != paginator.page %}
-        &lt;li&gt;&lt;a href="{{ url_for(endpoint, page=page) }}"
-         rel="me"&gt;{{ page }}&lt;/a&gt;&lt;/li&gt;
-      {% else %}
-        &lt;li class="current"&gt;&lt;span&gt;{{ page }}&lt;/span&gt;&lt;/li&gt;
-      {% endif %}
-    {% else %}
-      &lt;li&gt;&lt;span class=ellipsis&gt;…&lt;/span&gt;&lt;/li&gt;
+<pre><code>{% macro pagination(paginator, endpoint=None, class_='pagination') %}
+    {% if not endpoint %}
+        {% set endpoint = request.endpoint %}
     {% endif %}
-  {%- endfor %}
+    {% if "page" in kwargs %}
+        {% do kwargs.pop("page") %}
+    {% endif %}
+    &lt;nav&gt;
+        &lt;ul class="{{ class_ }}"&gt;
+          {%- if paginator.has_prev %}
+            &lt;li&gt;&lt;a href="{{ url_for(endpoint, page=paginator.prev_page_number, **kwargs) }}"
+             rel="me prev"&gt;&lt;span aria-hidden="true"&gt;&amp;laquo;&lt;/span&gt;&lt;/a&gt;&lt;/li&gt;
+          {% else %}
+            &lt;li class="disabled"&gt;&lt;span&gt;&lt;span aria-hidden="true"&gt;&amp;laquo;&lt;/span&gt;&lt;/span&gt;&lt;/li&gt;
+          {%- endif %}
 
-  {%- if paginator.has_next %}
-    &lt;li&gt;&lt;a href="{{ url_for(endpoint, page=paginator.next_num) }}"
-     rel="me next"&gt;»&lt;/a&gt;&lt;/li&gt;
-  {% else %}
-    &lt;li class="disabled"&gt;&lt;span&gt;»&lt;/span&gt;&lt;/li&gt;
-  {%- endif %}
-  &lt;/ol&gt;
+          {%- for page in paginator.pages %}
+            {% if page %}
+              {% if page != paginator.page %}
+                &lt;li&gt;&lt;a href="{{ url_for(endpoint, page=page, **kwargs) }}"
+                 rel="me"&gt;{{ page }}&lt;/a&gt;&lt;/li&gt;
+              {% else %}
+                &lt;li class="active"&gt;&lt;span&gt;{{ page }}&lt;/span&gt;&lt;/li&gt;
+              {% endif %}
+            {% else %}
+              &lt;li&gt;&lt;span class=ellipsis&gt;…&lt;/span&gt;&lt;/li&gt;
+            {% endif %}
+          {%- endfor %}
+
+          {%- if paginator.has_next %}
+            &lt;li&gt;&lt;a href="{{ url_for(endpoint, page=paginator.next_page_number, **kwargs) }}"
+             rel="me next"&gt;»&lt;/a&gt;&lt;/li&gt;
+          {% else %}
+            &lt;li class="disabled"&gt;&lt;span aria-hidden="true"&gt;&amp;raquo;&lt;/span&gt;&lt;/li&gt;
+          {%- endif %}
+        &lt;/ul&gt;
+    &lt;/nav&gt;
 {% endmacro %}
 </code></pre>
 
-<hr><h4>
-<a name="credits" class="anchor" href="#credits"><span class="octicon octicon-link"></span></a>Credits:</h4>
+<hr>
+
+<h4>
+<a id="credits" class="anchor" href="#credits" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Credits:</h4>
 
 <p><a href="http://www.sqlalchemy.org/">SQLAlchemy</a></p>
 
@@ -463,25 +532,22 @@ print(list(users))  # [User(21), User(22), User(23), ... , User(40)]
 
 <p><a href="https://github.com/lucuma/sqlalchemy-wrapper">SQLAlchemy-Wrapper</a></p>
 
-<hr><p><img class="emoji" title=":copyright:" alt=":copyright:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/00a9.png" height="20" width="20" align="absmiddle"> 2014</p>
+<p><a href="https://github.com/mardix/paginator.py">Paginator</a></p>
 
-<p>:license: MIT, see LICENSE for more details.</p>
-      </section>
+<hr>
 
-      <footer>
-        <span class="ribbon-outer">
-          <span class="ribbon-inner">
-            <p>this project by <a href="https://github.com/mardix">mardix</a> can be found on <a href="https://github.com/mardix/active-sqlalchemy">GitHub</a></p>
-          </span>
-          <span class="left-tail"></span>
-          <span class="right-tail"></span>
-        </span>
-        <p>Generated with <a href="http://pages.github.com">GitHub Pages</a> using Merlot</p>
-        <span class="octocat"></span>
+<p>copyright: 2015-2016</p>
+
+<p>license: MIT, see LICENSE for more details.</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/mardix/active-alchemy">Active-sqlalchemy</a> is maintained by <a href="https://github.com/mardix">mardix</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
       </footer>
 
-    </div>
+    </section>
 
-    
+  
   </body>
 </html>
