@@ -27,8 +27,12 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import MetaData
 from paginator import Paginator
 import inflection
+import sqlalchemy_utils as sa_utils
+import arrow
 
 DEFAULT_PER_PAGE = 10
+
+utcnow = arrow.utcnow
 
 def _create_scoped_session(db, query_cls):
     session = sessionmaker(autoflush=True, autocommit=False,
@@ -55,6 +59,13 @@ def _include_sqlalchemy(db):
                 setattr(db, key, getattr(module, key))
     db.Table = _tablemaker(db)
     db.event = sqlalchemy.event
+    db.utils = sa_utils
+    db.arrow = arrow
+    db.utcnow = utcnow
+    db.SADateTime = db.DateTime
+    db.DateTime = sa_utils.ArrowType
+    db.JSONType = sa_utils.JSONType
+    db.EmailType = sa_utils.EmailType
 
 
 class BaseQuery(Query):
@@ -154,7 +165,7 @@ class BaseModel(object):
         """
         data = {}
         for k, v in self.to_dict().items():
-            if isinstance(v, datetime.datetime):
+            if isinstance(v, (datetime.datetime, sa_utils.ArrowType, arrow.Arrow)):
                 v = v.isoformat()
             data[k] = v
         return json.dumps(data)
@@ -211,10 +222,10 @@ class BaseModel(object):
 
     def delete(self, delete=True, hard_delete=False):
         """
-        Soft delete a record 
+        Soft delete a record
         :param delete: Bool - To soft-delete/soft-undelete a record
-        :param hard_delete: Bool - *** Not applicable under BaseModel 
-                            
+        :param hard_delete: Bool - *** Not applicable under BaseModel
+
         """
         try:
             self.db.session.delete(self)
@@ -228,10 +239,10 @@ class Model(BaseModel):
     Model create
     """
     id = Column(Integer, primary_key=True)
-    created_at = Column(DateTime, default=func.now())
-    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+    created_at = Column(sa_utils.ArrowType, default=utcnow)
+    updated_at = Column(sa_utils.ArrowType, default=utcnow, onupdate=utcnow)
     is_deleted = Column(Boolean, default=False, index=True)
-    deleted_at = Column(DateTime, default=None)
+    deleted_at = Column(sa_utils.ArrowType, default=None)
 
     @classmethod
     def query(cls, *args, **kwargs):
@@ -280,7 +291,7 @@ class Model(BaseModel):
         else:
             data = {
                 "is_deleted": delete,
-                "deleted_at": func.now() if delete else None
+                "deleted_at": utcnow() if delete else None
             }
             self.update(**data)
         return self

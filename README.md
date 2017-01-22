@@ -1,7 +1,7 @@
 
 #Active-Alchemy
 
-**Version 0.10.***
+**Version 1.0.***
 
 ---
 
@@ -22,6 +22,10 @@ the session, model and everything necessary for SQLAlchemy.
 - It adds the following columns: `id`, `created_at`, `updated_at`, `is_deleted`, `deleted_at`
 - When `delete()`, it soft deletes the entry so it doesn't get queried. But it still
 exists in the database. This feature allows you to un-delete an entry
+- It uses Arrow for DateTime
+- DateTime is saved in UTC and uses the ArrowType from the SQLAlchemy-Utils
+- Added some data types: JSONType, EmailType, and the whole SQLAlchemy-Utils Type
+- db.now -> gives you the Arrow UTC type
 - It is still SQLAlchemy. You can access all the SQLAlchemy awesomeness
 
 ---
@@ -69,7 +73,7 @@ exists in the database. This feature allows you to un-delete an entry
 ####Update record from query iteration
 
 	for user in User.query():
-		user.update(last_access=db.func.now());
+		user.update(last_access=db.utcnow());
 		
 
 ####Soft Delete a record
@@ -473,6 +477,10 @@ ______
 [SQLAlchemy-Wrapper](https://github.com/lucuma/sqlalchemy-wrapper)
 
 [Paginator](https://github.com/mardix/paginator.py)
+
+[Arrow](http://crsmithdev.com/arrow/)
+
+[SQLAlchemy-Utils](https://sqlalchemy-utils.readthedocs.io)
 
 ---
 

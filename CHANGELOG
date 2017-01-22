@@ -1,3 +1,15 @@
+- 1.0.0
+    - Uses SQLAl 1.1
+    - Added SQLAlchemy-Utils to take advantage of ArrowType for Date
+    - Added ArrowType
+    - DateTime is now saved in UTC and ArrowType
+    - native db.DateTime is now ArrowType. Use SADateTime for sa.DateTime
+    - DateTime returned can be directly manipulated
+    - All SQLAlchemy-Utils data type is available (https://sqlalchemy-utils.readthedocs.io)
+    - Backwards incompatible as date will no longer be the one set
+
+--------------------------------------------------------------------------------
+
 - 0.10.0
     - Change name from SQLAlchemy to ActiveAlchemy
     - Replace method 'all()' with 'query()'
