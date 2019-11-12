@@ -1,7 +1,7 @@
 
 # Active-Alchemy
 
-**Version 1.0.***
+**Version 1.x.x***
 
 ---
 
