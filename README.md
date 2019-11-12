@@ -1,5 +1,5 @@
 
-#Active-Alchemy
+# Active-Alchemy
 
 **Version 1.0.***
 
@@ -30,9 +30,9 @@ exists in the database. This feature allows you to un-delete an entry
 
 ---
 
-##Quick Overview:
+## Quick Overview:
 
-####Create the model
+#### Create the model
 
     from active_alchemy import ActiveAlchemy
 
@@ -44,13 +44,13 @@ exists in the database. This feature allows you to un-delete an entry
 		last_access = db.Column(db.Datetime)
 
 	
-####Retrieve all records
+#### Retrieve all records
 
     for user in User.query():
         print(user.name)
     
     
-####Create new record
+#### Create new record
 
 	user = User.create(name="Mardix", location="Moon")
 	
@@ -59,30 +59,30 @@ exists in the database. This feature allows you to un-delete an entry
 	user = User(name="Mardix", location="Moon").save()
 
     
-####Get a record by primary key (id)
+#### Get a record by primary key (id)
 
     user = User.get(1234)
 
 
-####Update record from primary key
+#### Update record from primary key
 
 	user = User.get(1234)
 	if user:
 		user.update(location="Neptune") 
 
-####Update record from query iteration
+#### Update record from query iteration
 
 	for user in User.query():
 		user.update(last_access=db.utcnow());
 		
 
-####Soft Delete a record
+#### Soft Delete a record
 
 	user = User.get(1234)
 	if user:
 		user.delete() 
 		
-####Query Records
+#### Query Records
 
     users = User.query(User.location.distinct())
 
@@ -90,7 +90,7 @@ exists in the database. This feature allows you to un-delete an entry
         ...
 
 
-####Query with filter
+#### Query with filter
 
 
     all = User.query().filter(User.location == "USA")
@@ -99,7 +99,7 @@ exists in the database. This feature allows you to un-delete an entry
         ...
 
 
-##How to use
+## How to use
 
 
 ### Install
@@ -375,7 +375,7 @@ or
 
 ### More examples
 
-####Many databases, one web app
+#### Many databases, one web app
 
 
     app = Flask(__name__)
@@ -383,7 +383,7 @@ or
     db2 = ActiveAlchemy(URI2, app)
 
 
-####Many web apps, one database
+#### Many web apps, one database
 
 
     db = ActiveAlchemy(URI1)
@@ -468,7 +468,7 @@ This is one way how you could render such a pagination in your templates:
 
 ______
 
-####Credits:
+#### Credits:
 
 [SQLAlchemy](http://www.sqlalchemy.org/)
 
