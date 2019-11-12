@@ -33,11 +33,11 @@ setup(
     download_url='http://github.com/mardix/active-alchemy/tarball/master',
     py_modules=[py_module],
     install_requires=[
-        "SQLAlchemy>=1.1",
-        "PyMySQL==0.6.6",
-        "pg8000==1.10.2",
+        "SQLAlchemy",
+        "PyMySQL",
+        "pg8000",
         "Paginator",
-        "inflection==0.3.1",
+        "inflection",
         "arrow",
         "sqlalchemy-utils"
     ],

@@ -1,3 +1,5 @@
+- 1.1.0
+    - Fixed dependencies
 - 1.0.0
     - Uses SQLAl 1.1
     - Added SQLAlchemy-Utils to take advantage of ArrowType for Date
